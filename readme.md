@@ -1,7 +1,11 @@
-npm install 
+npm install
 
 cd /server
-touch .env 
+touch .env
 
 Add DB_URI = youruri in .env file
 
+ADDITIONAL COMMANDS
+
+npm install axios
+npm install react-router-dom
