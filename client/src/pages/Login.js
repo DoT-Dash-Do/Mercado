@@ -11,7 +11,7 @@ const Login = () => {
 
   const [formShift, setFormShift] = useState(false);
 
-  const [error, setError] = useState("This is the error");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const Login = () => {
           <House size={32} />
         </div>
 
-        <div className="mb-4 text-6xl tracking-wider text-gray-100">
+        <div className="mb-4 text-6xl tracking-widest text-gray-100">
           MERCADO
         </div>
 
@@ -60,12 +60,12 @@ const Login = () => {
           </span>
         </div>
       </div>
-      <div className="bg-[#1f1f1f] w-2/3 flex flex-col items-center text-white ">
-        <h1 className="select-none absolute top-12 text-5xl border-b-2 p-2 rounded-lg">
+      <div className="bg-[#1f1f1f] w-2/3 flex flex-col items-center justify-center text-white h-full">
+        <h1 className="select-none absolute top-24 text-3xl p-2 rounded-lg">
           LOGIN
         </h1>
 
-        <div className="flex flex-col items-center absolute top-44">
+        <div className="flex flex-col items-center border-2 rounded-lg border-gray-400 w-1/2 p-4">
           {/* FORM NAVBAR */}
           <div className="flex border-2 border-gray-400 select-none text-base mb-4 rounded-lg">
             <div
@@ -73,7 +73,7 @@ const Login = () => {
               // className="w-32 text-center p-2 hover:bg-gray-700 cursor-pointer rounded-l-lg
               className={`w-32 text-center ${
                 !formShift && "bg-[#df94ff] text-black"
-              } p-2 hover:bg-gray-700 cursor-pointer font-semibold rounded-l-lg hover:text-white`}
+              } p-2 hover:bg-gray-700 cursor-pointer font-semibold rounded-l-md hover:text-white`}
             >
               User
             </div>
@@ -81,23 +81,20 @@ const Login = () => {
               onClick={handleValueChangeSeller}
               className={`w-32 text-center p-2 font-semibold hover:bg-gray-700 ${
                 formShift && "bg-[#df94ff] text-black"
-              } cursor-pointer rounded-r-lg hover:text-white`}
+              } cursor-pointer rounded-r-md hover:text-white`}
             >
               Supplier
             </div>
           </div>
           {/* FORM NUMBER 1 */}
           {!formShift && (
-            <form
-              className="w-1/2 rounded-lg p-8 border-2 border-gray-400"
-              onSubmit={handleSubmit}
-            >
-              <h1 className="text-center text-lg mb-6 rounded-md select-none">
-                Sign in as{" "}
+            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
+              {/* <h1 className="text-center text-lg mb-6 rounded-md select-none">
+                Login as{" "}
                 <span className="font-semibold text-xl text-[#df94ff]">
                   USER
                 </span>
-              </h1>
+              </h1> */}
               <label
                 htmlFor="username"
                 className="text-lg select-none tracking-wider"
@@ -144,16 +141,13 @@ const Login = () => {
           {/* SECOND FORM FOR SUPPLIER */}
 
           {formShift && (
-            <form
-              className="w-1/2 rounded-lg p-8 border-2 border-gray-400"
-              onSubmit={handleSubmit}
-            >
-              <h1 className="text-center text-lg mb-6 rounded-md select-none">
-                Sign in as{" "}
+            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
+              {/* <h1 className="text-center text-lg mb-6 rounded-md select-none">
+                Login as{" "}
                 <span className="font-semibold text-xl text-[#df94ff]">
                   SUPPLIER
                 </span>
-              </h1>
+              </h1> */}
               <label
                 htmlFor="username"
                 className="text-lg select-none tracking-wider"
