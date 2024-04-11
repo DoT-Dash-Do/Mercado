@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 dotenv.config();
 
 mongoose.connect(process.env.DB_URI || "enterYourDBURI")
-  .then(() => console.log('MongoDB connected'))
+  .then(() => console.log('MongoDB connected new'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 const app = express();
