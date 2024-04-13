@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [buyerUsername, setBuyerUsername] = useState("");
-  const [supplierUsername, setSupplierUsername] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
+  const [sellerEmail, setSellerEmail] = useState("");
 
   const [buyerPassword, setBuyerPassword] = useState("");
-  const [supplierPassword, setSupplierPassword] = useState("");
+  const [sellerPassword, setSellerPassword] = useState("");
 
   const [formShift, setFormShift] = useState(false);
 
@@ -41,7 +41,7 @@ const Login = () => {
       <div className="bg-[#121212] w-1/3 h-full text-white flex flex-col items-center justify-center font-semibold select-none">
         <div
           onClick={handleHomeNav}
-          className="absolute top-8 left-8 p-2 hover:bg-gray-700 rounded-full cursor-pointer"
+          className="absolute top-8 left-8 p-2 hover:bg-[#323232] rounded-full cursor-pointer"
         >
           <House size={32} />
         </div>
@@ -51,7 +51,7 @@ const Login = () => {
         </div>
 
         <div className="text-base tracking-normal absolute bottom-20">
-          Donot have an account ?{" "}
+          Do not have an account ?{" "}
           <span
             onClick={handleRegisterNav}
             className="cursor-pointer text-[#df94ff] underline text-lg"
@@ -65,61 +65,54 @@ const Login = () => {
           LOGIN
         </h1>
 
-        <div className="flex flex-col items-center border-2 rounded-lg border-gray-400 w-1/2 p-4">
+        <div className="flex flex-col items-center bg-[#282828] rounded-lg border-gray-400 w-1/2 p-4">
           {/* FORM NAVBAR */}
           <div className="flex border-2 border-gray-400 select-none text-base mb-4 rounded-lg">
             <div
               onClick={handleValueChangeBuyer}
-              // className="w-32 text-center p-2 hover:bg-gray-700 cursor-pointer rounded-l-lg
               className={`w-32 text-center ${
                 !formShift && "bg-[#df94ff] text-black"
-              } p-2 hover:bg-gray-700 cursor-pointer font-semibold rounded-l-md hover:text-white`}
+              } p-2 hover:bg-[#323232] cursor-pointer font-semibold rounded-l-md hover:text-white`}
             >
               User
             </div>
             <div
               onClick={handleValueChangeSeller}
-              className={`w-32 text-center p-2 font-semibold hover:bg-gray-700 ${
+              className={`w-32 text-center p-2 font-semibold hover:bg-[#323232] ${
                 formShift && "bg-[#df94ff] text-black"
               } cursor-pointer rounded-r-md hover:text-white`}
             >
-              Supplier
+              Seller
             </div>
           </div>
           {/* FORM NUMBER 1 */}
           {!formShift && (
             <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
-              {/* <h1 className="text-center text-lg mb-6 rounded-md select-none">
-                Login as{" "}
-                <span className="font-semibold text-xl text-[#df94ff]">
-                  USER
-                </span>
-              </h1> */}
               <label
-                htmlFor="username"
-                className="text-lg select-none tracking-wider"
+                htmlFor="email"
+                className="text-lg select-none tracking-wider ml-1"
               >
-                Username
+                Email
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#2e2e2e] focus:scale-[1.03] transition duration-150"
-                id="username"
+                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                id="email"
                 type="text"
-                placeholder="Enter your username"
-                value={buyerUsername}
+                placeholder="Enter your email"
+                value={buyerEmail}
                 onChange={(e) => {
-                  setBuyerUsername(e.target.value);
+                  setBuyerEmail(e.target.value);
                 }}
                 autoComplete="off"
               />
               <label
                 htmlFor="password"
-                className="text-lg select-none tracking-wider"
+                className="text-lg select-none tracking-wider ml-1"
               >
                 Password
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#2e2e2e] focus:scale-[1.03] transition duration-150"
+                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="password"
                 type="password"
                 placeholder="Enter your password"
@@ -138,47 +131,41 @@ const Login = () => {
             </form>
           )}
 
-          {/* SECOND FORM FOR SUPPLIER */}
+          {/* SECOND FORM FOR SELLER */}
 
           {formShift && (
-            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
-              {/* <h1 className="text-center text-lg mb-6 rounded-md select-none">
-                Login as{" "}
-                <span className="font-semibold text-xl text-[#df94ff]">
-                  SUPPLIER
-                </span>
-              </h1> */}
+            <form className="w-full rounded-lg p-8 " onSubmit={handleSubmit}>
               <label
-                htmlFor="username"
-                className="text-lg select-none tracking-wider"
+                htmlFor="email"
+                className="text-lg select-none tracking-wider ml-1"
               >
-                Username
+                Email
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#2e2e2e] focus:scale-[1.03] transition duration-150"
-                id="username"
+                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                id="email"
                 type="text"
-                placeholder="Enter your username"
-                value={supplierUsername}
+                placeholder="Enter your email"
+                value={sellerEmail}
                 onChange={(e) => {
-                  setSupplierUsername(e.target.value);
+                  setSellerEmail(e.target.value);
                 }}
                 autoComplete="off"
               />
               <label
                 htmlFor="password"
-                className="text-lg select-none tracking-wider"
+                className="text-lg select-none tracking-wider ml-1"
               >
                 Password
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#2e2e2e] focus:scale-[1.03] transition duration-150"
+                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                value={supplierPassword}
+                value={sellerPassword}
                 onChange={(e) => {
-                  setSupplierPassword(e.target.value);
+                  setSellerPassword(e.taSget.value);
                 }}
                 autoComplete="off"
               />
