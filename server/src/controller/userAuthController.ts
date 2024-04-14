@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import User from "../models/user";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { transporter } from "../utils/nodemailer";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/user";
 import { errorHandler } from "../utils/error";
 import { htmlResponse } from "../utils/htmlResponse";
+import { transporter } from "../utils/nodemailer";
 dotenv.config();
 
 export const regUser = async (
@@ -24,6 +24,7 @@ export const regUser = async (
   });
   try {
     const hello = await newUser.save();
+
     const verifyLink = hello.email + "*_*" + newUser._id;
     await transporter.sendMail(
       {
@@ -44,16 +45,20 @@ export const regUser = async (
       },
       (error, info) => {
         if (error) {
-          return next(errorHandler(550, "not able to send verification mail"));
+          return next(
+            errorHandler(200, "Not able to send the verification mail")
+          );
         }
       }
     );
-    res.status(201).json({
+    //TRY TO MAKE THE VERIFICATION MAIL ASYNC
+    return res.status(201).json({
       success: true,
       message: "user created successfully",
     });
   } catch (error) {
-    next(errorHandler(550, "user already exists"));
+    // STATUS CODE GIVING AXIOS ERROR
+    return next(errorHandler(200, "The mail entered already exists"));
   }
 };
 
@@ -63,32 +68,32 @@ export const loginUser = async (
   next: NextFunction
 ) => {
   const { email, password } = req.body;
+  console.log(req);
+  console.log(password);
   try {
-    const validU = await User.findOne({ email });
-    if (!validU) return next(errorHandler(404, "wrong credentials"));
+    //SAME STATUS CODE ERROR
+    const validU = await User.findOne({ email: email });
+    if (!validU) return next(errorHandler(200, "wrong credentials"));
     const passCheck = bcrypt.compareSync(password, validU.password);
-    if (!passCheck) return next(errorHandler(401, "wrong credentials"));
+    if (!passCheck) return next(errorHandler(200, "wrong credentials"));
     const token = jwt.sign(
       { id: validU._id },
       process.env.JWT_SECRET || "haklabaBuptis"
     );
     const { password: pass, ...rest } = validU.toObject() as User;
     if (rest.emailVerified == false) {
-      return next(errorHandler(550, "Email has not been verified"));
+      return next(errorHandler(200, "Email has not been verified"));
     }
-    res
+    return res
       .cookie("Current_User", token, { httpOnly: true })
       .status(200)
       .json(rest);
   } catch (error) {
-    next(errorHandler(500, "internal server error"));
+    return next(errorHandler(200, "internal server error"));
   }
 };
 
-export const verifyEmail = async (
-  req: Request,
-  res: Response
-) => {
+export const verifyEmail = async (req: Request, res: Response) => {
   try {
     const chk = req.params.chk;
     const linkSplit = chk.split("*_*");

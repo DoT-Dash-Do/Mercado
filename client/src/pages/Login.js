@@ -1,3 +1,4 @@
+import axios from "axios";
 import { House } from "phosphor-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +23,57 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("working");
+  };
+
+  const handleUserSubmit = async (e) => {
+    e.preventDefault();
+
+    //email
+    if (buyerEmail === null || buyerEmail === undefined || buyerEmail === "") {
+      setError("Please provide an email");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(buyerEmail)) {
+      setError("Enter a valid email");
+      return;
+    }
+
+    //password
+    if (
+      buyerPassword === null ||
+      buyerPassword === undefined ||
+      buyerPassword === ""
+    ) {
+      setError("Please enter a password");
+      return;
+    }
+    if (buyerPassword.length < 8 || buyerPassword.length > 20) {
+      setError("Password must be 8-20 characters long");
+      return;
+    }
+
+    try {
+      console.log(buyerEmail);
+      console.log(buyerPassword);
+      const response = await axios.post(
+        "http://localhost:3003/api/user/login",
+        {
+          email: buyerEmail,
+          password: buyerPassword,
+        }
+      );
+      if (response.data.success === false) {
+        setError(response.data.message);
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+
+    console.log("Logged In");
   };
 
   const handleValueChangeBuyer = () => {
@@ -87,7 +139,7 @@ const Login = () => {
           </div>
           {/* FORM NUMBER 1 */}
           {!formShift && (
-            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
+            <form className="w-full rounded-lg p-8" onSubmit={handleUserSubmit}>
               <label
                 htmlFor="email"
                 className="text-lg select-none tracking-wider ml-1"
