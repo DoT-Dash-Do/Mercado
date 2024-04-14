@@ -6,6 +6,7 @@ interface User {
   lastName:string;
   email: string;
   emailVerified : boolean;
+  profilePic : string;
   password: string;
 }
 
@@ -17,6 +18,7 @@ const UserSchema = new Schema<UserModel>({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   emailVerified:{type:Boolean,default:false},
+  profilePic:{type:String,default:""},
   password: { type: String, required: true }
 },{timestamps:true});
 
