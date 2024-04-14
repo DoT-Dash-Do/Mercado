@@ -6,7 +6,6 @@ const PasswordPop = ({ passPop, setPassPop }) => {
   const [confirmPass, setConfirmPass] = useState("");
 
   const handleCross = () => {
-    console.log(passPop);
     setPassPop(!passPop);
   };
 
@@ -16,16 +15,16 @@ const PasswordPop = ({ passPop, setPassPop }) => {
 
   return (
     <div className="fixed top-0 w-full h-screen z-20 flex justify-center items-center p-4 bg-black bg-opacity-75 backdrop-blur-sm">
-      <div className="bg-[#282828] p-6 text-white w-1/3 rounded-lg">
-        <div className="w-full flex justify-center items-center text-2xl mb-6">
+      <div className="bg-[#282828] p-2 py-6 md:py-6 md:p-6 text-white w-full md:w-3/4 xl:w-5/12 rounded-lg">
+        <div className="w-full flex justify-center items-center text-xl md:text-2xl mb-6">
           <h1>Update Password</h1>
         </div>
         {/* LABEL */}
-        <div>
+        <div className="text-sm sm:text-base md:text-lg">
           <div className="pb-2 border-b-2 border-[#4a4a4a]">
             <label
               htmlFor="oldPass"
-              className="text-lg select-none tracking-wider ml-2"
+              className="select-none tracking-wider ml-2"
             >
               Enter old password
             </label>
@@ -44,7 +43,7 @@ const PasswordPop = ({ passPop, setPassPop }) => {
           <div className="pt-8">
             <label
               htmlFor="newPass"
-              className="text-lg select-none tracking-wider ml-2"
+              className="select-none tracking-wider ml-2"
             >
               Enter new password
             </label>
@@ -60,7 +59,7 @@ const PasswordPop = ({ passPop, setPassPop }) => {
             />
             <label
               htmlFor="confirmPass"
-              className="text-lg select-none tracking-wider ml-2"
+              className="select-none tracking-wider ml-2"
             >
               Confirm new password
             </label>
@@ -79,16 +78,16 @@ const PasswordPop = ({ passPop, setPassPop }) => {
 
         {/* SAVE AND CANCEL */}
 
-        <div className="flex justify-between select-none mt-4">
+        <div className="flex justify-between select-none mt-4 text-sm md:text-base lg:text-lg">
           <div
-            className="p-2 w-28 flex justify-center items-center rounded-lg cursor-pointer border-2 border-[#323232] hover:bg-[#323232]"
+            className="p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer border-2 border-[#323232] hover:bg-[#323232]"
             onClick={handleCross}
           >
             Cancel
           </div>
           <div
             onClick={handleSave}
-            className="border-2 p-2 w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
+            className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
           >
             Save
           </div>
