@@ -2,19 +2,23 @@ import { Document, Schema, model } from 'mongoose';
 
 interface User {
   username: string;
+  firstName:string;
+  lastName:string;
   email: string;
+  emailVerified : boolean;
   password: string;
-  createdAt: Date;
 }
 
 interface UserModel extends User, Document {}
 
 const UserSchema = new Schema<UserModel>({
   username: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
+  emailVerified:{type:Boolean,default:false},
+  password: { type: String, required: true }
+},{timestamps:true});
 
 const UserModel = model<UserModel>('User', UserSchema);
 
