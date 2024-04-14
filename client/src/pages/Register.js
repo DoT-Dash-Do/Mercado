@@ -1,3 +1,4 @@
+import axios from "axios";
 import { House } from "phosphor-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,11 +28,6 @@ const Register = () => {
     navigate("/login");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("working");
-  };
-
   const handleValueChangeBuyer = () => {
     setFormShift(false);
   };
@@ -42,6 +38,96 @@ const Register = () => {
 
   const handleHomeNav = () => {
     navigate("/");
+  };
+
+  //USER SUBMIT
+  const handleUserSubmit = async (e) => {
+    e.preventDefault();
+    //first name
+    if (buyerFN === null || buyerFN === undefined || buyerFN === "") {
+      setError("Please enter the First name.");
+      return;
+    }
+    if (buyerFN.length < 3) {
+      setError("First name must be of length 3");
+      return;
+    }
+
+    //last name
+    if (buyerLN === null || buyerLN === undefined || buyerLN === "") {
+      setError("Please enter the Last name.");
+      return;
+    }
+    if (buyerLN.length < 3) {
+      setError("Last name must be of length 3");
+      return;
+    }
+
+    //email
+    if (buyerEmail === null || buyerEmail === undefined || buyerEmail === "") {
+      setError("Please provide an email");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(buyerEmail)) {
+      setError("Enter a valid email");
+      return;
+    }
+
+    //username
+    if (
+      buyerUsername === null ||
+      buyerUsername === undefined ||
+      buyerUsername === ""
+    ) {
+      setError("Please enter a username");
+      return;
+    }
+    if (buyerUsername.length < 3) {
+      setError("Username must be of length 3");
+      return;
+    }
+
+    //password
+    if (
+      buyerPassword === null ||
+      buyerPassword === undefined ||
+      buyerPassword === ""
+    ) {
+      setError("Please enter a password");
+      return;
+    }
+    if (buyerPassword.length < 8 || buyerPassword.length > 20) {
+      setError("Password must be 8-20 characters long");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/api/user/register",
+        {
+          firstName: buyerFN,
+          lastName: buyerLN,
+          username: buyerUsername,
+          email: buyerEmail,
+          password: buyerPassword,
+        }
+      );
+      console.log(response.data);
+      if (response.data.success === false) {
+        setError(response.data.message);
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log("Registered");
+  };
+  const handleSellerSubmit = (e) => {
+    e.preventDefault();
+    console.log("working seller");
   };
 
   return (
@@ -95,7 +181,7 @@ const Register = () => {
           </div>
           {/* FORM NUMBER 1 */}
           {!formShift && (
-            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
+            <form className="w-full rounded-lg p-8" onSubmit={handleUserSubmit}>
               {/* DIV FOR FIRSTNAME MIDDLENAME LASTNAME */}
               <div className="flex w-full">
                 <div className="w-1/3 mr-2">
@@ -210,7 +296,10 @@ const Register = () => {
               />
 
               <div className="w-full flex justify-center mt-4">
-                <button className="text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-8 rounded-md tracking-wide">
+                <button
+                  onClick={handleUserSubmit}
+                  className="text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-8 rounded-md tracking-wide"
+                >
                   Submit
                 </button>
               </div>
@@ -220,7 +309,10 @@ const Register = () => {
           {/* SECOND FORM FOR SUPPLIER */}
 
           {formShift && (
-            <form className="w-full rounded-lg p-8" onSubmit={handleSubmit}>
+            <form
+              className="w-full rounded-lg p-8"
+              onSubmit={handleSellerSubmit}
+            >
               {/* DIV FOR FIRSTNAME MIDDLENAME LASTNAME */}
               <div className="flex w-full">
                 <div className="w-1/3 mr-2">
