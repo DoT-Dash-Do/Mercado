@@ -15,14 +15,17 @@ const Profile = () => {
   const [popVisible, setPopupVisible] = useState(false);
   const [popPlaceholder, setPopPlaceholder] = useState("");
   const [passPop, setPassPop] = useState("");
+  const [type, setType] = useState("");
 
   const handleUsernamePopup = () => {
     setPopPlaceholder("Username");
+    setType("username");
     setPopupVisible(!popVisible);
   };
 
   const handlePhonePopup = () => {
     setPopPlaceholder("Phone Number");
+    setType("phone");
     setPopupVisible(!popVisible);
   };
 
@@ -39,6 +42,7 @@ const Profile = () => {
             popVisible={popVisible}
             setPopupVisible={setPopupVisible}
             popPlaceholder={popPlaceholder}
+            type={type}
           />
         )}
         {passPop && (
