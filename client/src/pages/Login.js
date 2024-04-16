@@ -62,6 +62,7 @@ const Login = () => {
           password: buyerPassword,
         }
       );
+      console.log(response);
       if (response.data.success === false) {
         setError(response.data.message);
         return;
@@ -73,7 +74,35 @@ const Login = () => {
       return;
     }
 
+    // try {
+    //   console.log(buyerEmail);
+    //   console.log(buyerPassword);
+
+    //   const response = await fetch("http://localhost:3003/api/user/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       email: buyerEmail,
+    //       password: buyerPassword,
+    //     }),
+    //   });
+
+    //   const data = await response.json();
+    //   console.log(response.headers);
+
+    //   if (data.success === false) {
+    //     setError(data.message);
+    //     return;
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    //   return;
+    // }
+
     console.log("Logged In");
+    // navigate("/");
   };
 
   const handleValueChangeBuyer = () => {
@@ -89,8 +118,16 @@ const Login = () => {
   };
 
   return (
-    <div className="flex w-full h-screen">
-      <div className="bg-[#121212] w-1/3 h-full text-white flex flex-col items-center justify-center font-semibold select-none">
+    <div className="block lg:flex w-full h-screen">
+      <div
+        onClick={handleHomeNav}
+        className="w-full bg-[#121212] h-16 text-white fixed top-0 lg:hidden flex items-center justify-center px-4"
+      >
+        <div className="text-3xl tracking-widest text-gray-100 select-none cursor-pointer">
+          MERCADO
+        </div>
+      </div>
+      <div className="bg-[#121212] w-1/3 h-full text-white hidden lg:flex flex-col items-center justify-center font-semibold select-none">
         <div
           onClick={handleHomeNav}
           className="absolute top-8 left-8 p-2 hover:bg-[#323232] rounded-full cursor-pointer"
@@ -112,17 +149,15 @@ const Login = () => {
           </span>
         </div>
       </div>
-      <div className="bg-[#1f1f1f] w-2/3 flex flex-col items-center justify-center text-white h-full">
-        <h1 className="select-none absolute top-24 text-3xl p-2 rounded-lg">
-          LOGIN
-        </h1>
+      <div className="bg-[#1f1f1f] w-full lg:w-2/3 px-4 md:px-0 flex flex-col items-center justify-center text-white h-full">
+        <h1 className="select-none text-3xl p-2 rounded-lg">LOGIN</h1>
 
-        <div className="flex flex-col items-center bg-[#282828] rounded-lg border-gray-400 w-1/2 p-4">
+        <div className="flex flex-col items-center bg-[#282828] rounded-lg border-gray-400 w-full md:w-3/4 xl:w-1/2 p-2 py-4 md:p-4">
           {/* FORM NAVBAR */}
-          <div className="flex border-2 border-gray-400 select-none text-base mb-4 rounded-lg">
+          <div className="flex border-2 border-gray-400 select-none text-sm md:text-base mb-4 rounded-lg">
             <div
               onClick={handleValueChangeBuyer}
-              className={`w-32 text-center ${
+              className={`w-24 md:w-32 text-center ${
                 !formShift && "bg-[#df94ff] text-black"
               } p-2 hover:bg-[#323232] cursor-pointer font-semibold rounded-l-md hover:text-white`}
             >
@@ -130,24 +165,36 @@ const Login = () => {
             </div>
             <div
               onClick={handleValueChangeSeller}
-              className={`w-32 text-center p-2 font-semibold hover:bg-[#323232] ${
+              className={`w-24 md:w-32 text-center p-2 font-semibold hover:bg-[#323232] ${
                 formShift && "bg-[#df94ff] text-black"
               } cursor-pointer rounded-r-md hover:text-white`}
             >
               Seller
             </div>
           </div>
+          <div className="text-xs mb-4 md:text-sm block lg:hidden xl:text-base tracking-normal">
+            Do not have an account ?{" "}
+            <span
+              onClick={handleRegisterNav}
+              className="cursor-pointer text-[#df94ff] underline text-base md:text-lg"
+            >
+              Register
+            </span>
+          </div>
           {/* FORM NUMBER 1 */}
           {!formShift && (
-            <form className="w-full rounded-lg p-8" onSubmit={handleUserSubmit}>
+            <form
+              className="w-full rounded-lg p-1 md:p-8"
+              onSubmit={handleUserSubmit}
+            >
               <label
                 htmlFor="email"
-                className="text-lg select-none tracking-wider ml-1"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
               >
                 Email
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="email"
                 type="text"
                 placeholder="Enter your email"
@@ -159,12 +206,12 @@ const Login = () => {
               />
               <label
                 htmlFor="password"
-                className="text-lg select-none tracking-wider ml-1"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
               >
                 Password
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="password"
                 type="password"
                 placeholder="Enter your password"
@@ -176,7 +223,7 @@ const Login = () => {
               />
 
               <div className="w-full flex justify-center mt-4">
-                <button className="text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-8 rounded-md tracking-wide">
+                <button className="text-sm md:text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-6 md:px-8 rounded-md tracking-wide">
                   Submit
                 </button>
               </div>
@@ -186,15 +233,18 @@ const Login = () => {
           {/* SECOND FORM FOR SELLER */}
 
           {formShift && (
-            <form className="w-full rounded-lg p-8 " onSubmit={handleSubmit}>
+            <form
+              className="w-full rounded-lg p-1 md:p-8"
+              onSubmit={handleSubmit}
+            >
               <label
                 htmlFor="email"
-                className="text-lg select-none tracking-wider ml-1"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
               >
                 Email
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="email"
                 type="text"
                 placeholder="Enter your email"
@@ -206,12 +256,12 @@ const Login = () => {
               />
               <label
                 htmlFor="password"
-                className="text-lg select-none tracking-wider ml-1"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
               >
                 Password
               </label>
               <input
-                className="w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
                 id="password"
                 type="password"
                 placeholder="Enter your password"
@@ -223,7 +273,7 @@ const Login = () => {
               />
 
               <div className="w-full flex justify-center mt-4">
-                <button className="text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-8 rounded-md tracking-wide">
+                <button className="text-sm md:text-base font-semibold text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black p-2 px-6 md:px-8 rounded-md tracking-wide">
                   Submit
                 </button>
               </div>
@@ -232,7 +282,7 @@ const Login = () => {
         </div>
 
         {error && (
-          <div className="fixed bottom-16 bg-gray-200 text-black p-2 text-base font-semibold text-center rounded-lg">
+          <div className="fixed bottom-14 bg-gray-200 text-black p-2 text-sm md:text-base font-semibold text-center rounded-lg">
             {error}
           </div>
         )}

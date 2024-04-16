@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder }) => {
+const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
   const [newUsername, setNewUsername] = useState("");
 
   const handleCross = () => {
@@ -8,8 +8,12 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder }) => {
     setPopupVisible(!popVisible);
   };
 
-  const handleSave = () => {
-    console.log(newUsername);
+  const handleUserSave = () => {
+    console.log("wroking user success");
+  };
+
+  const handlePhoneSave = () => {
+    console.log("working phone success");
   };
 
   return (
@@ -46,12 +50,22 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder }) => {
           >
             Cancel
           </div>
-          <div
-            onClick={handleSave}
-            className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
-          >
-            Save
-          </div>
+          {type === "username" && (
+            <div
+              onClick={handleUserSave}
+              className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
+            >
+              Save
+            </div>
+          )}
+          {type === "phone" && (
+            <div
+              onClick={handlePhoneSave}
+              className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
+            >
+              Save
+            </div>
+          )}
         </div>
       </div>
     </div>
