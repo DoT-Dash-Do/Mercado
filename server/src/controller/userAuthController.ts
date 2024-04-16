@@ -46,19 +46,18 @@ export const regUser = async (
       (error, info) => {
         if (error) {
           return next(
-            errorHandler(200, "Not able to send the verification mail")
+            errorHandler(401, "Not able to send the verification mail")
           );
         }
       }
     );
-    //TRY TO MAKE THE VERIFICATION MAIL ASYNC
     return res.status(201).json({
       success: true,
       message: "user created successfully",
     });
   } catch (error) {
-    // STATUS CODE GIVING AXIOS ERROR
-    return next(errorHandler(200, "The mail entered already exists"));
+    
+    return next(errorHandler(500, "The mail or username entered already exists"));
   }
 };
 
@@ -68,28 +67,29 @@ export const loginUser = async (
   next: NextFunction
 ) => {
   const { email, password } = req.body;
-  console.log(req);
-  console.log(password);
   try {
-    //SAME STATUS CODE ERROR
     const validU = await User.findOne({ email: email });
-    if (!validU) return next(errorHandler(200, "wrong credentials"));
+    if (!validU) return next(errorHandler(401, "wrong credentials"));
     const passCheck = bcrypt.compareSync(password, validU.password);
-    if (!passCheck) return next(errorHandler(200, "wrong credentials"));
+    if (!passCheck) return next(errorHandler(401, "wrong credentials"));
     const token = jwt.sign(
       { id: validU._id },
       process.env.JWT_SECRET || "haklabaBuptis"
     );
-    const { password: pass, ...rest } = validU.toObject() as User;
+    const { password: pass,cart, ...rest } = validU.toObject() as User;
     if (rest.emailVerified == false) {
-      return next(errorHandler(200, "Email has not been verified"));
+      return next(errorHandler(550, "Email has not been verified"));
     }
     return res
-      .cookie("Current_User", token, { httpOnly: true })
       .status(200)
-      .json(rest);
+      .json({
+        success:true,
+        data:rest,
+        token:token,
+        type:"user"
+      });
   } catch (error) {
-    return next(errorHandler(200, "internal server error"));
+    return next(errorHandler(500, "internal server error"));
   }
 };
 

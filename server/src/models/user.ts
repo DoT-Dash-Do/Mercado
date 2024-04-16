@@ -8,20 +8,21 @@ interface User {
   emailVerified : boolean;
   profilePic : string;
   password: string;
+  cart : {
+    product : string,
+    quantity : number
+  } [];
 }
-
 interface UserModel extends User, Document {}
-
 const UserSchema = new Schema<UserModel>({
-  username: { type: String, required: true },
+  username: { type: String, required: true ,unique:true},
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   emailVerified:{type:Boolean,default:false},
   profilePic:{type:String,default:""},
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  cart:{type:[{product:String,quantity:Number}],default:[]} 
 },{timestamps:true});
-
 const UserModel = model<UserModel>('User', UserSchema);
-
 export default UserModel;
