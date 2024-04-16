@@ -89,10 +89,14 @@ export const loginSeller = async (
     {
         return next(errorHandler(550,"Email has not been verified"));
     }
-    res
-      .cookie("Current_User", token, { httpOnly: true })
+    return res
       .status(200)
-      .json(rest);
+      .json({
+        success:true,
+        data:rest,
+        token:token,
+        type:"seller"
+      });
   } catch (error) {
     next(errorHandler(500, "internal server error"));
   }

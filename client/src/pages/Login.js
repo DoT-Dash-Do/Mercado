@@ -49,14 +49,12 @@ const Login = () => {
       setError("Please enter a password");
       return;
     }
-    if (buyerPassword.length < 8 || buyerPassword.length > 20) {
-      setError("Password must be 8-20 characters long");
-      return;
-    }
+    // if (buyerPassword.length < 8 || buyerPassword.length > 20) {
+    //   setError("Password must be 8-20 characters long");
+    //   return;
+    // }
 
     try {
-      console.log(buyerEmail);
-      console.log(buyerPassword);
       const response = await axios.post(
         "http://localhost:3003/api/user/login",
         {
@@ -69,6 +67,8 @@ const Login = () => {
         setError(response.data.message);
         return;
       }
+      localStorage.setItem("access_granted",response.data.token);
+      console.log(localStorage.getItem("access_granted"));
     } catch (err) {
       console.log(err);
       return;
