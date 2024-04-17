@@ -1,16 +1,42 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 const PasswordPop = ({ passPop, setPassPop }) => {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
+  const token = window.localStorage.getItem("token");
 
   const handleCross = () => {
     setPassPop(!passPop);
   };
 
-  const handleSave = () => {
-    console.log(newPass);
+  const handleSave = async () => {
+    try {
+      //
+      if (newPass === "" || confirmPass === "") {
+        console.log("Please enter both new password and old password");
+        return;
+      }
+      if (newPass !== confirmPass) {
+        console.log("New password and old password do not match");
+        return;
+      }
+      const response = await axios.put(
+        "http://localhost:3003/api/user/updateUser/password",
+        {
+          token,
+          updatedField: newPass,
+          oldPassword: oldPass,
+        }
+      );
+
+      console.log(response.data);
+
+      setPassPop(!passPop);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

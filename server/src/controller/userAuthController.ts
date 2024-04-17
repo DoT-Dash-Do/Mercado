@@ -56,8 +56,9 @@ export const regUser = async (
       message: "user created successfully",
     });
   } catch (error) {
-    
-    return next(errorHandler(500, "The mail or username entered already exists"));
+    return next(
+      errorHandler(500, "The mail or username entered already exists")
+    );
   }
 };
 
@@ -76,18 +77,16 @@ export const loginUser = async (
       { id: validU._id },
       process.env.JWT_SECRET || "haklabaBuptis"
     );
-    const { password: pass,cart, ...rest } = validU.toObject() as User;
+    const { password: pass, cart, ...rest } = validU.toObject() as User;
     if (rest.emailVerified == false) {
       return next(errorHandler(550, "Email has not been verified"));
     }
-    return res
-      .status(200)
-      .json({
-        success:true,
-        data:rest,
-        token:token,
-        type:"user"
-      });
+    return res.status(200).json({
+      success: true,
+      data: rest,
+      token: token,
+      type: "user",
+    });
   } catch (error) {
     return next(errorHandler(500, "internal server error"));
   }
@@ -105,5 +104,55 @@ export const verifyEmail = async (req: Request, res: Response) => {
     res.status(200).send(htmlResponse);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getUserData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+
+  if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET || "haklabaBuptis",
+    (err: any, result: any) => {
+      if (err) return next(errorHandler(403, "forbidden"));
+      return result.id;
+    }
+  );
+
+  const user: any = await User.findById(decoded);
+
+  const { username, firstName, lastName, email, emailVerified, profilePic } =
+    user;
+
+  return res.json({
+    userData: {
+      username,
+      firstName,
+      lastName,
+      email,
+      emailVerified,
+      profilePic,
+    },
+  });
+};
+
+export const userValidity = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+  try {
+    if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
+    jwt.verify(token, process.env.JWT_SECRET || "haklabaBuptis");
+
+    res.status(200).json({ tokenStatus: true });
+  } catch (err) {
+    next(errorHandler(401, "unAuthenticated"));
   }
 };

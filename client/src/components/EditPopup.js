@@ -1,19 +1,61 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
-  const [newUsername, setNewUsername] = useState("");
+  const [field, setField] = useState("");
+  const token = window.localStorage.getItem("token");
 
   const handleCross = () => {
     console.log(popVisible);
     setPopupVisible(!popVisible);
   };
 
-  const handleUserSave = () => {
-    console.log("wroking user success");
+  const handleUsernameSave = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/api/user/updateUser/username",
+        {
+          token,
+          updatedField: field,
+        }
+      );
+
+      setPopupVisible(!popVisible);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
-  const handlePhoneSave = () => {
-    console.log("working phone success");
+  const handleFirstNameSave = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/api/user/updateUser/firstName",
+        {
+          token,
+          updatedField: field,
+        }
+      );
+
+      setPopupVisible(!popVisible);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
+  };
+
+  const handleLastNameSave = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:3003/api/user/updateUser/lastName",
+        {
+          token,
+          updatedField: field,
+        }
+      );
+
+      setPopupVisible(!popVisible);
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
   return (
@@ -33,9 +75,9 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
             id="email"
             type="text"
             placeholder={`Enter new ${popPlaceholder}`}
-            value={newUsername}
+            value={field}
             onChange={(e) => {
-              setNewUsername(e.target.value);
+              setField(e.target.value);
             }}
             autoComplete="off"
           />
@@ -52,15 +94,23 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
           </div>
           {type === "username" && (
             <div
-              onClick={handleUserSave}
+              onClick={handleUsernameSave}
               className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
             >
               Save
             </div>
           )}
-          {type === "phone" && (
+          {type === "firstName" && (
             <div
-              onClick={handlePhoneSave}
+              onClick={handleFirstNameSave}
+              className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
+            >
+              Save
+            </div>
+          )}
+          {type === "lastName" && (
+            <div
+              onClick={handleLastNameSave}
               className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
             >
               Save

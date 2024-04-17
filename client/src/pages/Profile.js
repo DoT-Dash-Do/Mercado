@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   ArrowLineDown,
   At,
@@ -6,7 +7,7 @@ import {
   Money,
   PencilSimple,
 } from "phosphor-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditPopup from "../components/EditPopup";
 import Navbar from "../components/Navbar";
 import PasswordPop from "../components/PasswordPopup";
@@ -16,6 +17,35 @@ const Profile = () => {
   const [popPlaceholder, setPopPlaceholder] = useState("");
   const [passPop, setPassPop] = useState("");
   const [type, setType] = useState("");
+  const [userData, setUserData] = useState({});
+  const token = window.localStorage.getItem("token");
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/user/get-user-data",
+        {
+          token,
+        }
+      );
+
+      setUserData(response.data.userData);
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/user/get-user-data",
+        {
+          token,
+        }
+      );
+
+      setUserData(response.data.userData);
+    };
+    fetchUserData();
+  }, [popVisible]);
 
   const handleUsernamePopup = () => {
     setPopPlaceholder("Username");
@@ -23,9 +53,14 @@ const Profile = () => {
     setPopupVisible(!popVisible);
   };
 
-  const handlePhonePopup = () => {
-    setPopPlaceholder("Phone Number");
-    setType("phone");
+  const handleFirstNamePopup = () => {
+    setPopPlaceholder("First Name");
+    setType("firstName");
+    setPopupVisible(!popVisible);
+  };
+  const handleLastNamePopup = () => {
+    setPopPlaceholder("Last Name");
+    setType("lastName");
     setPopupVisible(!popVisible);
   };
 
@@ -65,14 +100,16 @@ const Profile = () => {
               <div className="flex items-center w-full p-2">
                 <div className="w-4/12">Email : </div>
                 <div className="text-gray-200 w-8/12 border-b-2 flex justify-between items-center p-2">
-                  <div className="truncate">Demo Text</div>
+                  <div className="truncate">{userData.email || "N/A"}</div>
                 </div>
               </div>
 
               <div className="flex items-center w-full p-2">
                 <div className="w-4/12">Username : </div>
                 <div className="text-gray-200 w-8/12 border-b-2 flex justify-between items-center p-2">
-                  <div className="truncate mr-4">Demo Text</div>
+                  <div className="truncate mr-4">
+                    {userData.username || "N/A"}
+                  </div>
                   <div
                     onClick={handleUsernamePopup}
                     title="Edit"
@@ -84,11 +121,11 @@ const Profile = () => {
               </div>
 
               <div className="flex items-center w-full p-2">
-                <div className="w-4/12">Phone Number : </div>
+                <div className="w-4/12">First Name : </div>
                 <div className="text-gray-200 w-8/12 border-b-2 flex justify-between items-center p-2">
-                  <div className="truncate">Demo Text</div>
+                  <div className="truncate">{userData.firstName || "N/A"}</div>
                   <div
-                    onClick={handlePhonePopup}
+                    onClick={handleFirstNamePopup}
                     title="Edit"
                     className="cursor-pointer rounded-full"
                   >
@@ -98,17 +135,14 @@ const Profile = () => {
               </div>
 
               <div className="flex items-center w-full p-2">
-                <div className="w-4/12">Age : </div>
+                <div className="w-4/12">Last Name : </div>
                 <div className="text-gray-200 w-8/12 border-b-2 flex justify-between items-center p-2">
-                  Demo text
-                </div>
-              </div>
-
-              <div className="flex items-center w-full p-2">
-                <div className="w-4/12">Date of Birth : </div>
-                <div className="text-gray-200 w-8/12 border-b-2 flex justify-between items-center p-2">
-                  <div className="truncate">Demo Text</div>
-                  <div title="Edit" className="cursor-pointer rounded-full">
+                  <div className="truncate">{userData.lastName || "N/A"}</div>
+                  <div
+                    onClick={handleLastNamePopup}
+                    title="Edit"
+                    className="cursor-pointer rounded-full"
+                  >
                     <PencilSimple className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
@@ -127,8 +161,6 @@ const Profile = () => {
         </div>
         <div className="w-full lg:w-1/3 border-[#df94ff] lg:shadow-[#df94ff] shadow-lg lg:flex justify-center">
           <div className="w-full flex flex-col items-center pb-10 justify-center px-4 sm:px-0">
-            {/* PROFILE HEADING !!FIX!! */}
-
             <h1 className="text-5xl p-8 z-10 lg:flex absolute top-24 hidden select-none text-[#df94ff]">
               Profile
             </h1>

@@ -1,10 +1,10 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 
-const HomePage = () => {
+const HomePage = ({ loggedIn }) => {
   return (
     <div>
-      <Navbar />
+      <Navbar loggedIn={loggedIn} />
       HomePage
     </div>
   );

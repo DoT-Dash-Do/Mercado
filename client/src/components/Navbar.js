@@ -2,7 +2,7 @@ import { List, Receipt, ShoppingCartSimple, User } from "phosphor-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ loggedIn }) => {
   const navigate = useNavigate();
   const [menuBar, setMenuBar] = useState(false);
 
@@ -24,6 +24,12 @@ const Navbar = () => {
 
   const handleMenuBar = () => {
     setMenuBar(!menuBar);
+  };
+
+  const handleLogoutNav = () => {
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("type");
+    navigate("/login");
   };
 
   return (
@@ -66,20 +72,30 @@ const Navbar = () => {
           >
             <ShoppingCartSimple size={24} />
           </div>
-          <div className="flex w-48 p-3 rounded-lg">
-            <div
-              onClick={handleLoginNav}
-              className="w-24 flex justify-center items-center cursor-pointer hover:bg-[#323232] rounded-md"
-            >
-              Login
+          {!loggedIn && (
+            <div className="flex w-48 p-3 rounded-lg">
+              <div
+                onClick={handleLoginNav}
+                className="w-24 flex justify-center items-center cursor-pointer hover:bg-[#323232] rounded-md"
+              >
+                Login
+              </div>
+              <div
+                onClick={handleRegisterNav}
+                className="w-24 flex justify-center items-center cursor-pointer hover:bg-[#323232] rounded-md"
+              >
+                Register
+              </div>
             </div>
+          )}
+          {loggedIn && (
             <div
-              onClick={handleRegisterNav}
-              className="w-24 flex justify-center items-center cursor-pointer hover:bg-[#323232] rounded-md"
+              onClick={handleLogoutNav}
+              className="w-24 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
             >
-              Register
+              Logout
             </div>
-          </div>
+          )}
         </div>
 
         {/* MENUBAR ICON */}

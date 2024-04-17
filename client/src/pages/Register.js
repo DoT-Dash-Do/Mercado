@@ -121,9 +121,11 @@ const Register = () => {
       }
     } catch (err) {
       console.log(err.response.data.message);
+      return;
     }
 
     console.log("Registered");
+    navigate("/login");
   };
   const handleSellerSubmit = (e) => {
     e.preventDefault();
