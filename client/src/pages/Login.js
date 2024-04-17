@@ -20,12 +20,12 @@ const Login = () => {
     navigate("/register");
   };
 
-  const handleSubmit = (e) => {
+  const handleSellerLogin = (e) => {
     e.preventDefault();
-    console.log("working");
+    console.log("working seller");
   };
 
-  const handleUserSubmit = async (e) => {
+  const handleUserLogin = async (e) => {
     e.preventDefault();
 
     //email
@@ -49,10 +49,11 @@ const Login = () => {
       setError("Please enter a password");
       return;
     }
-    // if (buyerPassword.length < 8 || buyerPassword.length > 20) {
-    //   setError("Password must be 8-20 characters long");
-    //   return;
-    // }
+
+    if (buyerPassword.length < 8 || buyerPassword.length > 20) {
+      setError("Password must be 8-20 characters long");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -62,47 +63,18 @@ const Login = () => {
           password: buyerPassword,
         }
       );
-      console.log(response);
       if (response.data.success === false) {
         setError(response.data.message);
         return;
       }
-      localStorage.setItem("access_granted",response.data.token);
-      console.log(localStorage.getItem("access_granted"));
+      window.localStorage.setItem("token", response.data.token);
+      window.localStorage.setItem("type", response.data.type);
     } catch (err) {
-      console.log(err);
+      setError(err.response.data.message);
       return;
     }
 
-    // try {
-    //   console.log(buyerEmail);
-    //   console.log(buyerPassword);
-
-    //   const response = await fetch("http://localhost:3003/api/user/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       email: buyerEmail,
-    //       password: buyerPassword,
-    //     }),
-    //   });
-
-    //   const data = await response.json();
-    //   console.log(response.headers);
-
-    //   if (data.success === false) {
-    //     setError(data.message);
-    //     return;
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   return;
-    // }
-
-    console.log("Logged In");
-    // navigate("/");
+    navigate("/");
   };
 
   const handleValueChangeBuyer = () => {
@@ -185,7 +157,7 @@ const Login = () => {
           {!formShift && (
             <form
               className="w-full rounded-lg p-1 md:p-8"
-              onSubmit={handleUserSubmit}
+              onSubmit={handleUserLogin}
             >
               <label
                 htmlFor="email"
@@ -235,7 +207,7 @@ const Login = () => {
           {formShift && (
             <form
               className="w-full rounded-lg p-1 md:p-8"
-              onSubmit={handleSubmit}
+              onSubmit={handleSellerLogin}
             >
               <label
                 htmlFor="email"

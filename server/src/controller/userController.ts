@@ -31,9 +31,7 @@ export const updateUser = async (
       const chk = (await User.findById(decoded)) as User;
       const hashChk = bcrypt.compareSync(req.body.oldPassword, chk.password);
       if (!hashChk) {
-        return next(
-          errorHandler(403, "old password doesnt match the new password")
-        );
+        return next(errorHandler(403, "Your old password is wrong"));
       }
       req.body.updatedField = bcrypt.hashSync(req.body.updatedField, 10);
     }
@@ -123,7 +121,7 @@ export const deletefromCart = async (
     const user: any = await User.findById(decoded).select("cart").exec();
     for (let i = user.cart.length - 1; i >= 0; i--) {
       if (user.cart[i].product == product) {
-        user.cart.splice(i, 1); 
+        user.cart.splice(i, 1);
         break;
       }
     }
