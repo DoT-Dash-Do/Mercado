@@ -12,7 +12,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchProductsOnHomePage = async () => {
       const response = await axios.get(
-        "http://localhost:3003/api/user/fetch-all-products"
+        "http://localhost:3003/api/product/fetch-all-products"
       );
       setProducts(response.data.products);
     };

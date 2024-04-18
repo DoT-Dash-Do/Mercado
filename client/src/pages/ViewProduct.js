@@ -10,7 +10,7 @@ const ViewProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/user/fetch-single-product",
+        "http://localhost:3003/api/product/fetch-single-product",
         {
           productId: params.id,
         }

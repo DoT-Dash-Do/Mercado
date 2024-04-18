@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
+import productRouter from "./routes/productRoutes";
 import sellerRouter from "./routes/sellerRoutes";
 import userRouter from "./routes/userRoutes";
 import { CustomError } from "./types/customError";
@@ -27,6 +28,8 @@ app.use(cookieparser());
 
 app.use("/api/user", userRouter);
 app.use("/api/seller", sellerRouter);
+app.use("/api/product", productRouter);
+
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";

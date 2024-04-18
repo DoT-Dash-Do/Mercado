@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { default as Product, default as ProductModel } from "../models/product";
 import Seller from "../models/seller";
 import { errorHandler } from "../utils/error";
+
 dotenv.config();
 
 export const updateSeller = async (
@@ -17,14 +18,17 @@ export const updateSeller = async (
     if (req.body.token == undefined)
       return next(errorHandler(401, "unAuthenticated"));
 
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       req.body.token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
     if (req.body.updatedField === "") {
       return next(errorHandler(404, "the field cannot be empty"));
     }
@@ -71,14 +75,18 @@ export const createProduct = async (
     req.body;
   try {
     if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
-    const seller = jwt.verify(
+
+    const seller: any = jwt.verify(
       token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!seller) {
+      return next(errorHandler(403, "forbidden"));
+    }
     const newProduct = new Product({
       ProductName,
       price,
