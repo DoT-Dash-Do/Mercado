@@ -9,14 +9,13 @@ import {
 } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import EditPopup from "../components/EditPopup";
-import Navbar from "../components/Navbar";
 import PasswordPop from "../components/PasswordPopup";
 
 const Profile = () => {
   const [popVisible, setPopupVisible] = useState(false);
   const [popPlaceholder, setPopPlaceholder] = useState("");
   const [passPop, setPassPop] = useState("");
-  const [type, setType] = useState("");
+  const [fieldType, setType] = useState("");
   const [userData, setUserData] = useState({});
   const token = window.localStorage.getItem("token");
   useEffect(() => {
@@ -30,7 +29,18 @@ const Profile = () => {
 
       setUserData(response.data.userData);
     };
-    fetchUserData();
+    const fetchSellerData = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/seller/get-seller-data",
+        {
+          token,
+        }
+      );
+
+      setUserData(response.data.userData);
+    };
+    if (window.localStorage.getItem("type") === "user") fetchUserData();
+    if (window.localStorage.getItem("type") === "seller") fetchSellerData();
   }, []);
 
   useEffect(() => {
@@ -41,10 +51,21 @@ const Profile = () => {
           token,
         }
       );
+      setUserData(response.data.userData);
+    };
+    const fetchSellerData = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/seller/get-seller-data",
+        {
+          token,
+        }
+      );
 
       setUserData(response.data.userData);
     };
-    fetchUserData();
+
+    if (window.localStorage.getItem("type") === "user") fetchUserData();
+    if (window.localStorage.getItem("type") === "seller") fetchSellerData();
   }, [popVisible]);
 
   const handleUsernamePopup = () => {
@@ -70,14 +91,13 @@ const Profile = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="pt-16 bg-[#1f1f1f] h-screen lg:flex text-white enableScroll">
         {popVisible && (
           <EditPopup
             popVisible={popVisible}
             setPopupVisible={setPopupVisible}
             popPlaceholder={popPlaceholder}
-            type={type}
+            fieldType={fieldType}
           />
         )}
         {passPop && (

@@ -3,7 +3,7 @@ import { House } from "phosphor-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setToken }) => {
   const [buyerEmail, setBuyerEmail] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
 
@@ -20,9 +20,60 @@ const Login = () => {
     navigate("/register");
   };
 
-  const handleSellerLogin = (e) => {
+  const handleSellerLogin = async (e) => {
     e.preventDefault();
-    console.log("working seller");
+    //email
+    if (
+      sellerEmail === null ||
+      sellerEmail === undefined ||
+      sellerEmail === ""
+    ) {
+      setError("Please provide an email");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(sellerEmail)) {
+      setError("Enter a valid email");
+      return;
+    }
+
+    //password
+    if (
+      sellerPassword === null ||
+      sellerPassword === undefined ||
+      sellerPassword === ""
+    ) {
+      setError("Please enter a password");
+      return;
+    }
+
+    if (sellerPassword.length < 8 || sellerPassword.length > 20) {
+      setError("Password must be 8-20 characters long");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/api/seller/login",
+        {
+          email: sellerEmail,
+          password: sellerPassword,
+        }
+      );
+      if (response.data.success === false) {
+        setError(response.data.message);
+        return;
+      }
+      setToken(response.data.token);
+      window.localStorage.setItem("token", response.data.token);
+      window.localStorage.setItem("type", response.data.type);
+    } catch (err) {
+      setError(err.response.data.message);
+      return;
+    }
+
+    navigate("/");
   };
 
   const handleUserLogin = async (e) => {
@@ -67,6 +118,7 @@ const Login = () => {
         setError(response.data.message);
         return;
       }
+      setToken(response.data.token);
       window.localStorage.setItem("token", response.data.token);
       window.localStorage.setItem("type", response.data.type);
     } catch (err) {
@@ -239,7 +291,7 @@ const Login = () => {
                 placeholder="Enter your password"
                 value={sellerPassword}
                 onChange={(e) => {
-                  setSellerPassword(e.taSget.value);
+                  setSellerPassword(e.target.value);
                 }}
                 autoComplete="off"
               />

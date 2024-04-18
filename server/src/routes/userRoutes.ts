@@ -9,6 +9,8 @@ import {
 import {
   addToCart,
   deletefromCart,
+  fetchAllProducts,
+  fetchSingleProduct,
   updateUser,
 } from "../controller/userController";
 const router = express.Router();
@@ -21,4 +23,7 @@ router.put("/addtocart", addToCart);
 router.put("/removefromcart", deletefromCart);
 router.post("/get-user-data", getUserData);
 router.post("/user-validity", userValidity);
+
+router.get("/fetch-all-products", fetchAllProducts);
+router.post("/fetch-single-product", fetchSingleProduct);
 export default router;

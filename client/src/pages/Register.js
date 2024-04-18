@@ -8,15 +8,15 @@ const Register = () => {
   const [buyerPassword, setBuyerPassword] = useState("");
   const [buyerUsername, setBuyerUsername] = useState("");
   const [buyerFN, setBuyerFN] = useState("");
-  const [buyerMN, setBuyerMN] = useState("");
   const [buyerLN, setBuyerLN] = useState("");
 
   const [sellerEmail, setSellerEmail] = useState("");
   const [sellerPassword, setSellerPassword] = useState("");
   const [sellerUsername, setSellerUsername] = useState("");
   const [sellerFN, setSellerFN] = useState("");
-  const [sellerMN, setSellerMN] = useState("");
   const [sellerLN, setSellerLN] = useState("");
+  const [veriType, setVeriType] = useState("");
+  const [veriNum, setVeriNum] = useState("");
 
   const [formShift, setFormShift] = useState(false);
 
@@ -41,6 +41,7 @@ const Register = () => {
   };
 
   //USER SUBMIT
+
   const handleUserSubmit = async (e) => {
     e.preventDefault();
     //first name
@@ -127,9 +128,113 @@ const Register = () => {
     console.log("Registered");
     navigate("/login");
   };
-  const handleSellerSubmit = (e) => {
+
+  // SELLER SUBMIT
+
+  const handleSellerSubmit = async (e) => {
     e.preventDefault();
-    console.log("working seller");
+
+    //first name
+    if (sellerFN === null || sellerFN === undefined || sellerFN === "") {
+      setError("Please enter the First name.");
+      return;
+    }
+    if (sellerFN.length < 3) {
+      setError("First name must be of length 3");
+      return;
+    }
+
+    //last name
+    if (sellerLN === null || sellerLN === undefined || sellerLN === "") {
+      setError("Please enter the Last name.");
+      return;
+    }
+    if (sellerLN.length < 3) {
+      setError("Last name must be of length 3");
+      return;
+    }
+
+    //email
+    if (
+      sellerEmail === null ||
+      sellerEmail === undefined ||
+      sellerEmail === ""
+    ) {
+      setError("Please provide an email");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(sellerEmail)) {
+      setError("Enter a valid email");
+      return;
+    }
+
+    //username
+    if (
+      sellerUsername === null ||
+      sellerUsername === undefined ||
+      sellerUsername === ""
+    ) {
+      setError("Please enter a username");
+      return;
+    }
+    if (sellerUsername.length < 3) {
+      setError("Username must be of length 3");
+      return;
+    }
+
+    //password
+    if (
+      sellerPassword === null ||
+      sellerPassword === undefined ||
+      sellerPassword === ""
+    ) {
+      setError("Please enter a password");
+      return;
+    }
+    if (sellerPassword.length < 8 || sellerPassword.length > 20) {
+      setError("Password must be 8-20 characters long");
+      return;
+    }
+
+    //verification type
+    if (veriType === null || veriType === undefined || veriType === "") {
+      setError("Please enter a verification type");
+      return;
+    }
+
+    //verification number
+    if (veriNum === null || veriNum === undefined || veriNum === "") {
+      setError("Please enter a verification number");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3003/api/seller/register",
+        {
+          firstName: sellerFN,
+          lastName: sellerLN,
+          username: sellerUsername,
+          email: sellerEmail,
+          password: sellerPassword,
+          verificationType: veriType,
+          verificationNumber: veriNum,
+        }
+      );
+      console.log(response.data.message);
+      if (response.data.success === false) {
+        setError(response.data.message);
+        return;
+      }
+    } catch (err) {
+      console.log(err.response.data.message);
+      return;
+    }
+
+    console.log("Registered");
+    navigate("/login");
   };
 
   return (
@@ -310,7 +415,7 @@ const Register = () => {
             </form>
           )}
 
-          {/* SECOND FORM FOR SUPPLIER */}
+          {/* SECOND FORM FOR SELLER */}
 
           {formShift && (
             <form
@@ -408,6 +513,40 @@ const Register = () => {
                 value={sellerPassword}
                 onChange={(e) => {
                   setSellerPassword(e.target.value);
+                }}
+                autoComplete="off"
+              />
+              <label
+                htmlFor="veriType"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
+              >
+                Verification Type
+              </label>
+              <input
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                id="veriType"
+                type="text"
+                placeholder="Enter your verification type"
+                value={veriType}
+                onChange={(e) => {
+                  setVeriType(e.target.value);
+                }}
+                autoComplete="off"
+              />
+              <label
+                htmlFor="veriNum"
+                className="text-base md:text-lg select-none tracking-wider ml-1"
+              >
+                Verification Number
+              </label>
+              <input
+                className="text-sm md:text-base w-full text-white mb-4 outline-none p-2 rounded-md placeholder-gray-400 bg-[#222222] focus:scale-[1.03] transition duration-150"
+                id="veriNum"
+                type="text"
+                placeholder="Enter your verification number"
+                value={veriNum}
+                onChange={(e) => {
+                  setVeriNum(e.target.value);
                 }}
                 autoComplete="off"
               />
