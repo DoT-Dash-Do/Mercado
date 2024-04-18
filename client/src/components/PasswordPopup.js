@@ -6,6 +6,7 @@ const PasswordPop = ({ passPop, setPassPop }) => {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const token = window.localStorage.getItem("token");
+  const type = window.localStorage.getItem("type");
 
   const handleCross = () => {
     setPassPop(!passPop);
@@ -13,7 +14,7 @@ const PasswordPop = ({ passPop, setPassPop }) => {
 
   const handleSave = async () => {
     try {
-      //
+      // checking errors
       if (newPass === "" || confirmPass === "") {
         console.log("Please enter both new password and old password");
         return;
@@ -22,16 +23,23 @@ const PasswordPop = ({ passPop, setPassPop }) => {
         console.log("New password and old password do not match");
         return;
       }
-      const response = await axios.put(
-        "http://localhost:3003/api/user/updateUser/password",
-        {
+      if (type === "user") {
+        await axios.put("http://localhost:3003/api/user/updateUser/password", {
           token,
-          updatedField: newPass,
           oldPassword: oldPass,
-        }
-      );
-
-      console.log(response.data);
+          updatedField: newPass,
+        });
+      }
+      if (type === "seller") {
+        await axios.put(
+          "http://localhost:3003/api/seller/updateSeller/password",
+          {
+            token,
+            oldPassword: oldPass,
+            updatedField: newPass,
+          }
+        );
+      }
 
       setPassPop(!passPop);
     } catch (err) {

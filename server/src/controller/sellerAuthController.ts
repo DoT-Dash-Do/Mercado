@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import Seller from "../models/seller";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { transporter } from "../utils/nodemailer";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { default as Seller, default as SellerModel } from "../models/seller";
 import { errorHandler } from "../utils/error";
 import { htmlResponse } from "../utils/htmlResponse";
+import { transporter } from "../utils/nodemailer";
 dotenv.config();
 
 export const regSeller = async (
@@ -71,7 +71,7 @@ export const loginSeller = async (
   res: Response,
   next: NextFunction
 ) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
   try {
     const validU = await Seller.findOne({ email });
     if (!validU) return next(errorHandler(404, "wrong credentials"));
@@ -83,39 +83,94 @@ export const loginSeller = async (
     );
     const { password: pass, ...rest } = validU.toObject() as Seller;
     if (rest.emailVerified == false) {
-        return next(errorHandler(550, "Email has not been verified"));
+      return next(errorHandler(550, "Email has not been verified"));
     }
-    if(rest.verified == false)
-    {
-        return next(errorHandler(550,"Email has not been verified"));
+    if (rest.verified == false) {
+      return next(errorHandler(550, "Email has not been verified"));
     }
-    return res
-      .status(200)
-      .json({
-        success:true,
-        data:rest,
-        token:token,
-        type:"seller"
-      });
+    return res.status(200).json({
+      success: true,
+      data: rest,
+      token: token,
+      type: "seller",
+    });
   } catch (error) {
     next(errorHandler(500, "internal server error"));
   }
 };
-export const verifyEmail = async (
-    req: Request,
-    res: Response
-  ) => {
-    try {
-      const chk = req.params.chk;
-      const linkSplit = chk.split("*_*");
-      await Seller.findByIdAndUpdate(
-        linkSplit[1],
-        { emailVerified: true },
-        { new: true }
-      );
-      
-      res.status(200).send(htmlResponse);
-    } catch (error) {
-      console.log(error);
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    const chk = req.params.chk;
+    const linkSplit = chk.split("*_*");
+    await Seller.findByIdAndUpdate(
+      linkSplit[1],
+      { emailVerified: true },
+      { new: true }
+    );
+
+    res.status(200).send(htmlResponse);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSellerData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+
+  if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET || "haklabaBuptis",
+    (err: any, result: any) => {
+      if (err) return next(errorHandler(403, "forbidden"));
+      return result.id;
     }
-  };
+  );
+
+  const user: any = await Seller.findById(decoded);
+
+  const { username, firstName, lastName, email, emailVerified, profilePic } =
+    user;
+
+  return res.json({
+    userData: {
+      username,
+      firstName,
+      lastName,
+      email,
+      emailVerified,
+      profilePic,
+    },
+  });
+};
+
+export const getSellerProfilePic = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+
+  try {
+    const seller = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) undefined;
+        return result.id;
+      }
+    );
+
+    const { profilePic } = (await SellerModel.findById({
+      _id: seller,
+    })) as Seller;
+
+    return res.status(201).json({ profilePic });
+  } catch (err) {
+    return next(errorHandler(501, "Unauthorized access"));
+  }
+};

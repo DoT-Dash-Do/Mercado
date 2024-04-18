@@ -1,9 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
+const EditPopup = ({
+  popVisible,
+  setPopupVisible,
+  popPlaceholder,
+  fieldType,
+}) => {
   const [field, setField] = useState("");
   const token = window.localStorage.getItem("token");
+  const type = window.localStorage.getItem("type");
 
   const handleCross = () => {
     console.log(popVisible);
@@ -12,13 +18,21 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
 
   const handleUsernameSave = async () => {
     try {
-      const response = await axios.put(
-        "http://localhost:3003/api/user/updateUser/username",
-        {
+      if (type === "user") {
+        await axios.put("http://localhost:3003/api/user/updateUser/username", {
           token,
           updatedField: field,
-        }
-      );
+        });
+      }
+      if (type === "seller") {
+        await axios.put(
+          "http://localhost:3003/api/seller/updateSeller/username",
+          {
+            token,
+            updatedField: field,
+          }
+        );
+      }
 
       setPopupVisible(!popVisible);
     } catch (err) {
@@ -28,13 +42,21 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
 
   const handleFirstNameSave = async () => {
     try {
-      const response = await axios.put(
-        "http://localhost:3003/api/user/updateUser/firstName",
-        {
+      if (type === "user") {
+        await axios.put("http://localhost:3003/api/user/updateUser/firstName", {
           token,
           updatedField: field,
-        }
-      );
+        });
+      }
+      if (type === "seller") {
+        await axios.put(
+          "http://localhost:3003/api/seller/updateSeller/firstName",
+          {
+            token,
+            updatedField: field,
+          }
+        );
+      }
 
       setPopupVisible(!popVisible);
     } catch (err) {
@@ -44,13 +66,21 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
 
   const handleLastNameSave = async () => {
     try {
-      const response = await axios.put(
-        "http://localhost:3003/api/user/updateUser/lastName",
-        {
+      if (type === "user") {
+        await axios.put("http://localhost:3003/api/user/updateUser/lastName", {
           token,
           updatedField: field,
-        }
-      );
+        });
+      }
+      if (type === "seller") {
+        await axios.put(
+          "http://localhost:3003/api/seller/updateSeller/lastName",
+          {
+            token,
+            updatedField: field,
+          }
+        );
+      }
 
       setPopupVisible(!popVisible);
     } catch (err) {
@@ -92,7 +122,7 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
           >
             Cancel
           </div>
-          {type === "username" && (
+          {fieldType === "username" && (
             <div
               onClick={handleUsernameSave}
               className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
@@ -100,7 +130,7 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
               Save
             </div>
           )}
-          {type === "firstName" && (
+          {fieldType === "firstName" && (
             <div
               onClick={handleFirstNameSave}
               className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
@@ -108,7 +138,7 @@ const EditPopup = ({ popVisible, setPopupVisible, popPlaceholder, type }) => {
               Save
             </div>
           )}
-          {type === "lastName" && (
+          {fieldType === "lastName" && (
             <div
               onClick={handleLastNameSave}
               className="border-2 p-2 w-20 sm:w-28 flex justify-center items-center rounded-lg cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black"
