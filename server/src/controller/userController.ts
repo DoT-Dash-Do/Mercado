@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import Product from "../models/product";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
@@ -16,14 +17,17 @@ export const updateUser = async (
     if (req.body.token == undefined)
       return next(errorHandler(401, "unAuthenticated"));
 
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       req.body.token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
     if (req.body.updatedField === "") {
       return next(errorHandler(404, "the field cannot be empty"));
     }
@@ -67,14 +71,17 @@ export const addToCart = async (
   const { token, product, quantity } = req.body;
   try {
     if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
     const user: any = await User.findById(decoded).select("cart").exec();
     var chk = 0;
     for (let prdc of user.cart) {
@@ -110,14 +117,17 @@ export const deletefromCart = async (
   const { token, product } = req.body;
   try {
     if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
     const user: any = await User.findById(decoded).select("cart").exec();
     for (let i = user.cart.length - 1; i >= 0; i--) {
       if (user.cart[i].product == product) {
@@ -133,5 +143,56 @@ export const deletefromCart = async (
     });
   } catch (error) {
     next(errorHandler(500, "not able to add to cart"));
+  }
+};
+
+export const populateCart = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token } = req.body;
+    if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
+    const decoded: any = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) return false;
+        return result.id;
+      }
+    );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
+    var arr: any = [];
+    var chk: number = 0;
+    const user: any = await User.findById(decoded).select("cart").exec();
+    for (let i = user.cart.length - 1; i >= 0; i--) {
+      const product: any = await Product.findById(user.cart[i].product);
+      if (product == undefined || product.stock < user.cart[i].quantity) {
+        user.cart.splice(i, 1);
+        chk = 1;
+      } else {
+        arr.push({
+          product : product,
+          quantity : user.cart[i].quantity
+        });
+      }
+    }
+    if (chk == 1) {
+      await User.findByIdAndUpdate(decoded, { cart: user.cart }, { new: true });
+      return res.status(200).json({
+        success: true,
+        cart: arr,
+        message: "Some items in your cart are not available right now",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      cart: arr,
+    });
+  } catch (error) {
+    next(errorHandler(550, "request not completed"));
   }
 };

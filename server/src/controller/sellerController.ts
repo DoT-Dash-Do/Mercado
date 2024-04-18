@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import Seller from "../models/seller";
 import { errorHandler } from "../utils/error";
-import  Product  from "../models/product";
+import Product from "../models/product";
 dotenv.config();
 
 export const updateSeller = async (
@@ -17,14 +17,17 @@ export const updateSeller = async (
     if (req.body.token == undefined)
       return next(errorHandler(401, "unAuthenticated"));
 
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       req.body.token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
-        if (err) return next(errorHandler(403, "forbidden"));
+        if (err) return false;
         return result.id;
       }
     );
+    if (!decoded) {
+      return next(errorHandler(403, "forbidden"));
+    }
     if (req.body.updatedField === "") {
       return next(errorHandler(404, "the field cannot be empty"));
     }
@@ -67,32 +70,36 @@ export const createProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-    const { ProductName, price, type, description, images, stock, token } = req.body;
-    try {
+  const { ProductName, price, type, description, images, stock, token } =
+    req.body;
+  try {
     if (token == undefined) return next(errorHandler(401, "unAuthenticated"));
-    const seller = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "haklabaBuptis",
-        (err: any, result: any) => {
-          if (err) return next(errorHandler(403, "forbidden"));
-          return result.id;
-        }
-      );
+    const seller:any = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) return false;
+        return result.id;
+      }
+    );
+    if (!seller) {
+      return next(errorHandler(403, "forbidden"));
+    }
     const newProduct = new Product({
-        ProductName,
-        price,
-        type,
-        description,
-        images,
-        stock,
-        seller
-      });
+      ProductName,
+      price,
+      type,
+      description,
+      images,
+      stock,
+      seller,
+    });
     await newProduct.save();
     res.status(200).json({
-        success:true,
-        message:"product Created"
-    })
-    } catch (error) {
-        next(errorHandler(550,"cannot create procuxt"));
-    }
+      success: true,
+      message: "product Created",
+    });
+  } catch (error) {
+    next(errorHandler(550, "cannot create procuxt"));
+  }
 };

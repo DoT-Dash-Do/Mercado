@@ -9,6 +9,7 @@ import {
 import {
   addToCart,
   deletefromCart,
+  populateCart,
   updateUser,
 } from "../controller/userController";
 const router = express.Router();
@@ -21,4 +22,5 @@ router.put("/addtocart", addToCart);
 router.put("/removefromcart", deletefromCart);
 router.post("/get-user-data", getUserData);
 router.post("/user-validity", userValidity);
+router.get("/populate-cart",populateCart);
 export default router;
