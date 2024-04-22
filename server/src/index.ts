@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
+import addressRouter from "./routes/addressRoutes";
+import orderRouter from "./routes/orderRoutes";
 import productRouter from "./routes/productRoutes";
 import sellerRouter from "./routes/sellerRoutes";
 import userRouter from "./routes/userRoutes";
@@ -29,6 +31,8 @@ app.use(cookieparser());
 app.use("/api/user", userRouter);
 app.use("/api/seller", sellerRouter);
 app.use("/api/product", productRouter);
+app.use("/api/address", addressRouter);
+app.use("/api/order", orderRouter);
 
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
@@ -40,6 +44,7 @@ app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
     message,
   });
 });
+
 app.listen(3003, () => {
   console.log("server started");
 });

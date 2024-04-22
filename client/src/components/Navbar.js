@@ -44,6 +44,10 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
     setMenuBar(!menuBar);
   };
 
+  const handleOrderNav = () => {
+    navigate("/view-orders");
+  };
+
   const handleLogoutNav = () => {
     setToken("");
     setProfilePic(null);
@@ -81,6 +85,7 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
           {loggedIn && (
             <>
               <div
+                onClick={handleOrderNav}
                 title="Orders"
                 className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
               >

@@ -5,6 +5,7 @@ import MaybeShowNav from "./components/MaybeShowNav";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ViewProduct from "./pages/ViewProduct";
@@ -69,6 +70,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/view-product/:id" element={<ViewProduct />} />
+          <Route path="/view-orders" element={<Orders />} />
         </Routes>
       </Router>
     </div>
