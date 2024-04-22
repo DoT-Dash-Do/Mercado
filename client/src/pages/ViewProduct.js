@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Popup = ({ isOpen, onClose }) => {
   return (
@@ -8,7 +8,10 @@ const Popup = ({ isOpen, onClose }) => {
       <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-50 flex justify-center items-center">
         <div className=" p-8 bg-[#030101] rounded-lg">
           <p className="text-white">Items have been added to your cart</p>
-          <button className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded" onClick={onClose}>
+          <button
+            className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
+            onClick={onClose}
+          >
             Close
           </button>
         </div>
@@ -64,13 +67,15 @@ const ViewProduct = () => {
       return;
     }
     try {
-      const response = await axios.put("http://localhost:3003/api/user/addtocart", {
-        token: token,
-        product: params.id,
-        quantity: amount,
-      });
-      if(response.data.success === true)
-      {
+      const response = await axios.put(
+        "http://localhost:3003/api/user/addtocart",
+        {
+          token: token,
+          product: params.id,
+          quantity: amount,
+        }
+      );
+      if (response.data.success === true) {
         setPopupOpen(true);
       }
     } catch (err) {
@@ -99,14 +104,14 @@ const ViewProduct = () => {
                     key={_id}
                     src={element}
                     alt="bhup"
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-md cursor-pointer"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-md cursor-pointer object-cover"
                     onClick={() => setActiveImage(element)}
                   />
                 );
               })}
           </div>
         </div>
-        <div className="flex flex-col gap-4 lg:w-2/4 lg:m-0 m-auto sm:w-96 w-72 lg:min-h-[450px] justify-between">
+        <div className="flex flex-col gap-4 lg:w-1/2 lg:m-0 m-auto sm:w-96 w-72 lg:min-h-[450px] justify-between">
           <span className=" text-[#df94ff] text-6xl font-semibold">
             {product.ProductName}
           </span>
@@ -141,22 +146,23 @@ const ViewProduct = () => {
                 +
               </button>
             </div>
-            {
-              type == "user" && (<button
-              className="bg-[#df94ff] hover:bg-[#a995b2] text-white font-semibold py-1 px-6 rounded-xl text-sm"
-              onClick={() => addToCart()}
-            >
-              Add to Cart
-            </button>)
-            }
-            {
-              (type==undefined || type != "user") && (<button
+            {type == "user" && (
+              <button
+                className="bg-[#df94ff] hover:bg-[#a995b2] text-white font-semibold py-1 px-6 rounded-xl text-sm"
+                onClick={() => addToCart()}
+              >
+                Add to Cart
+              </button>
+            )}
+            {(type == undefined || type != "user") && (
+              <button
                 className="bg-[#df94ff] text-white font-semibold py-1 px-6 rounded-xl text-sm disabled:bg-[#7e5b8e]"
                 onClick={() => addToCart()}
-               disabled>
+                disabled
+              >
                 Add to Cart
-              </button>)
-            }
+              </button>
+            )}
           </div>
         </div>
       </div>

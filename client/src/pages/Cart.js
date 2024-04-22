@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Trash } from "phosphor-react";
 import axios from "axios";
+import { Trash } from "phosphor-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Popup = ({ isOpen, onClose }) => {
   return (
     isOpen && (
@@ -75,8 +75,10 @@ export default function Cart() {
         <h6 className="text-[#df94ff] text-4xl md:text-6xl border-b lg:w-3/4 w-5/6">
           Cart
         </h6>
-        {items && items.length === 0 && <div className="text-white mt-4">Your cart looks empty</div>}
-        <div className="pb-3 lg:w-3/4 text-white text-center w-5/6 overflow-auto">
+        {items && items.length === 0 && (
+          <div className="text-white mt-4">Your cart looks empty</div>
+        )}
+        <div className="pb-3 lg:w-3/4 text-white text-center w-5/6 overflow-auto select-none">
           {items &&
             items.map((element, _id) => {
               return (
@@ -103,15 +105,13 @@ export default function Cart() {
                     </p>
                   </div>
 
-                  <p className="sm:text-xl text-sm">
-                    {element.quantity}
-                  </p>
+                  <p className="sm:text-xl text-sm">{element.quantity}</p>
                   <p className="sm:text-xl text-nowrap">
                     ₹ {Number(element.quantity) * Number(element.product.price)}
                   </p>
                   <button
                     title="delete from cart"
-                    className="hover:bg-slate-600 p-1 rounded-lg"
+                    className="hover:bg-slate-600 p-2 rounded-full"
                     onClick={() => {
                       deleteFromCart(element.product._id);
                     }}
@@ -122,13 +122,13 @@ export default function Cart() {
               );
             })}
         </div>
-        <div className="bottom-0 fixed bg-black w-full flex p-4 gap-4 items-center justify-end">
-          <div className="text-white">
-          Total: ₹{total}
+        <div className="bottom-0 fixed w-full flex justify-center p-2">
+          <div className="w-11/12 lg:w-3/4 flex p-4 gap-4 items-center justify-end bg-[#121212] rounded-lg">
+            <div className="text-white text-lg">
+              Total: ₹<span className="text-xl tracking-wider">{total}</span>
+            </div>
+            <button className="bg-[#df94ff] p-2 rounded-lg">Checkout</button>
           </div>
-          <button className="bg-[#df94ff] p-2 rounded-lg">
-          Checkout
-          </button>
         </div>
       </div>
       <Popup isOpen={popupOpen} onClose={() => setPopupOpen(false)} />
