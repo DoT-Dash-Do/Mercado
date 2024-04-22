@@ -23,5 +23,6 @@ router.put("/removefromcart", deletefromCart);
 router.post("/get-user-data", getUserData);
 router.post("/user-validity", userValidity);
 
-router.get("/populate-cart", populateCart);
+router.post("/populate-cart", populateCart);
+
 export default router;

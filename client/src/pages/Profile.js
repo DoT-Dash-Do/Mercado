@@ -14,6 +14,7 @@ import PasswordPop from "../components/PasswordPopup";
 const Profile = () => {
   const [popVisible, setPopupVisible] = useState(false);
   const [popPlaceholder, setPopPlaceholder] = useState("");
+  const [type,setUserType] = useState("");
   const [passPop, setPassPop] = useState("");
   const [fieldType, setType] = useState("");
   const [userData, setUserData] = useState({});
@@ -39,6 +40,7 @@ const Profile = () => {
 
       setUserData(response.data.userData);
     };
+    setUserType(window.localStorage.getItem("type"));
     if (window.localStorage.getItem("type") === "user") fetchUserData();
     if (window.localStorage.getItem("type") === "seller") fetchSellerData();
   }, []);
@@ -60,7 +62,6 @@ const Profile = () => {
           token,
         }
       );
-
       setUserData(response.data.userData);
     };
 

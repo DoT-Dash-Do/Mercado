@@ -5,8 +5,9 @@ export interface Product {
   price: number;
   type: string;
   description: string;
-  images: string[],
+  images: string[];
   stock:number;
+  soldStock:number;
   seller: Types.ObjectId | Seller;
 }
 
@@ -17,7 +18,8 @@ const productSchema = new Schema<ProductModel>({
   price: { type: Number, required: true },
   type: {type:String,required:true},
   images:{type:[String],default:[]},
-  stock:{ type:Number , required:true,default:0},
+  stock:{ type:Number , required:true},
+  soldStock:{ type:Number , required:true,default:0},
   description: { type: String, required: true },
   seller: { type: Schema.Types.ObjectId, ref: 'Seller', required: true }
 }, { timestamps: true });

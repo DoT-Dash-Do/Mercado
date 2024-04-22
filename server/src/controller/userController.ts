@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import Product from "../models/product";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import Product from "../models/product";
 import User from "../models/user";
 import { errorHandler } from "../utils/error";
 dotenv.config();
@@ -175,8 +175,8 @@ export const populateCart = async (
         chk = 1;
       } else {
         arr.push({
-          product: product,
-          quantity: user.cart[i].quantity,
+          product : product,
+          quantity : user.cart[i].quantity
         });
       }
     }

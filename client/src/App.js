@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import MaybeShowNav from "./components/MaybeShowNav";
 import Navbar from "./components/Navbar";
+import Cart from "./pages/Cart";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Orders from "./pages/Orders";
@@ -15,7 +16,6 @@ function App() {
   const [type, setType] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const [profilePic, setProfilePic] = useState(null);
-
   //checking the validity of the user
   useEffect(() => {
     const fetchValidity = async () => {
@@ -71,6 +71,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/view-product/:id" element={<ViewProduct />} />
           <Route path="/view-orders" element={<Orders />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </Router>
     </div>

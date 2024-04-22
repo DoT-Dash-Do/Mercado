@@ -9,6 +9,7 @@ export interface Seller {
   verified : boolean;
   verificationType : string;
   verificationNumber : string;
+  balance:number;
   profilePic:string;
   password: string;
 }
@@ -24,6 +25,7 @@ const SellerSchema = new Schema<SellerModel>({
   verified: { type: Boolean, default:true},
   verificationType: { type: String, required: true },
   verificationNumber: { type: String,unique:true },
+  balance:{type:Number,default:0},
   profilePic:{type:String,default:""},
   password: { type: String, required: true },
 },{timestamps:true});
