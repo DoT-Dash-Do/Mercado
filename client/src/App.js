@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import MaybeShowNav from "./components/MaybeShowNav";
 import Navbar from "./components/Navbar";
+import Cart from "./pages/Cart";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ViewProduct from "./pages/ViewProduct";
-import Cart from "./pages/Cart";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -69,7 +70,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/view-product/:id" element={<ViewProduct />} />
-          <Route path="/cart" element={<Cart/>}/>
+          <Route path="/view-orders" element={<Orders />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </Router>
     </div>
