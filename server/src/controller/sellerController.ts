@@ -2,10 +2,8 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { default as Product, default as ProductModel } from "../models/product";
 import Seller from "../models/seller";
 import { errorHandler } from "../utils/error";
-
 import Product from "../models/product";
 dotenv.config();
 
@@ -105,6 +103,7 @@ export const createProduct = async (
   } catch (error) {
     next(errorHandler(550, "cannot create procuxt"));
   }
+}
 
 export const fetchProducts = async (
   req: Request,
@@ -126,7 +125,7 @@ export const fetchProducts = async (
       return next(errorHandler(501, "Unauthorized Access"));
     }
 
-    const products = await ProductModel.find({ seller });
+    const products = await Product.find({ seller });
     return res.status(201).json({
       products,
       type,
@@ -135,5 +134,5 @@ export const fetchProducts = async (
   } catch (err) {
     return next(errorHandler(501, "Unauthorized Access"));
   }
+}
 
-};

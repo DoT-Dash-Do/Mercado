@@ -8,13 +8,13 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ViewProduct from "./pages/ViewProduct";
+import Cart from "./pages/Cart";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("token"));
   const [profilePic, setProfilePic] = useState(null);
-
   //checking the validity of the user
   useEffect(() => {
     const fetchValidity = async () => {
@@ -69,6 +69,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/view-product/:id" element={<ViewProduct />} />
+          <Route path="/cart" element={<Cart/>}/>
         </Routes>
       </Router>
     </div>
