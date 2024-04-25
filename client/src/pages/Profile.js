@@ -10,15 +10,20 @@ import {
 import React, { useEffect, useState } from "react";
 import EditPopup from "../components/EditPopup";
 import PasswordPop from "../components/PasswordPopup";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navig = useNavigate();
   const [popVisible, setPopupVisible] = useState(false);
   const [popPlaceholder, setPopPlaceholder] = useState("");
-  const [type,setUserType] = useState("");
+  const [type, setUserType] = useState("");
   const [passPop, setPassPop] = useState("");
   const [fieldType, setType] = useState("");
   const [userData, setUserData] = useState({});
   const token = window.localStorage.getItem("token");
+  const handleNavigation = ()=>{
+    navig("/userAddress");
+  }
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await axios.post(
@@ -205,7 +210,7 @@ const Profile = () => {
                   <Money className="text-lg sm:text-xl lg:text-2xl" />
                 </div>
               </div>
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
+              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center" onClick={handleNavigation}>
                 <div>Address</div>
                 <div>
                   <At className="text-lg sm:text-xl lg:text-2xl" />

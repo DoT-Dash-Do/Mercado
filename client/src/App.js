@@ -10,7 +10,7 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ViewProduct from "./pages/ViewProduct";
-
+import Address from "./pages/Address";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
@@ -72,6 +72,7 @@ function App() {
           <Route path="/view-product/:id" element={<ViewProduct />} />
           <Route path="/view-orders" element={<Orders />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/userAddress" element = {<Address/>}/>
         </Routes>
       </Router>
     </div>
