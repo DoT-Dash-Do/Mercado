@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/save-address", saveAddress);
 router.post("/delete-address", deleteAddress);
-router.get("/display-all-addresses", displayAllAddressesOfUser);
+router.post("/display-all-addresses", displayAllAddressesOfUser);
 router.get("/display-single-address", displaySingleAddress);
 router.put("/update-address/:id", updateAddress);
 
