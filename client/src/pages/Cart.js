@@ -19,11 +19,58 @@ const Popup = ({ isOpen, onClose }) => {
     )
   );
 };
+const AddressPopup = ({ isOpen, setAddressPopup, allAddress, setAddress }) => {
+  const handleAddressClick = (e) => {
+    setAddress(e.currentTarget.id);
+    setAddressPopup(false);
+  };
+  return (
+    isOpen && (
+      <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-50 flex justify-center items-center">
+        <div className=" p-6 bg-[#030101] rounded-lg w-11/12 sm:w-[400px] text-white select-none">
+          <div className="text-3xl text-center border-b-2 border-gray-400 mb-4">
+            Select Address
+          </div>
+          <div className="w-full enableScroll h-96">
+            {allAddress.map((add) => {
+              return (
+                <div
+                  key={add._id}
+                  id={
+                    add.houseNo +
+                    ", " +
+                    add.street +
+                    ", " +
+                    add.city +
+                    ", " +
+                    add.state
+                  }
+                  onClick={handleAddressClick}
+                  className="w-full rounded-md bg-[#1f1f1f] hover:bg-[#323232] p-3 cursor-pointer mb-4"
+                >
+                  {add.houseNo}, {add.street}, {add.city}, {add.state}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    )
+  );
+};
 export default function Cart() {
   const navigate = useNavigate();
   const [items, setItems] = useState();
   const [total, setTotal] = useState();
   const [popupOpen, setPopupOpen] = useState(false);
+  const [addressPopup, setAddressPopup] = useState(false);
+  const [address, setAddress] = useState("Select Address");
+  const [allAddress, setAllAddress] = useState([]);
+
+  const handleAddressPopup = () => {
+    setAddressPopup(true);
+  };
+
   const deleteFromCart = async (product) => {
     try {
       const token = window.localStorage.getItem("token");
@@ -63,8 +110,32 @@ export default function Cart() {
       console.log(error);
     }
   };
+
+  const fetchAllAddress = async () => {
+    const token = window.localStorage.getItem("token");
+
+    const response = await axios.post(
+      "http://localhost:3003/api/address/display-all-addresses",
+      {
+        token,
+      }
+    );
+
+    setAllAddress(response.data.addresses);
+    setAddress(
+      response.data.addresses[0].houseNo +
+        ", " +
+        response.data.addresses[0].street +
+        ", " +
+        response.data.addresses[0].city +
+        ", " +
+        response.data.addresses[0].state
+    );
+  };
+
   useEffect(() => {
     fetchUserCart();
+    fetchAllAddress();
   }, []);
   useEffect(() => {
     fetchUserCart();
@@ -122,16 +193,37 @@ export default function Cart() {
               );
             })}
         </div>
-        <div className="bottom-0 fixed w-full flex justify-center p-2">
-          <div className="w-11/12 lg:w-3/4 flex p-4 gap-4 items-center justify-end bg-[#121212] rounded-lg">
-            <div className="text-white text-lg">
-              Total: ₹<span className="text-xl tracking-wider">{total}</span>
+        <div className="bottom-0 fixed w-full">
+          <div className="w-full flex justify-center p-2 pb-0">
+            <div
+              onClick={handleAddressPopup}
+              className="text-white flex justify-end w-11/12 lg:w-3/4 gap-4 p-2 bg-[#121212]  rounded-tr-lg rounded-tl-lg select-none"
+            >
+              <div className="flex justify-center items-center ">
+                Select Address :{" "}
+              </div>
+              <div className="p-4 select-none cursor-pointer bg-[#1f1f1f] hover:bg-[#323232] rounded-md">
+                {address}
+              </div>
             </div>
-            <button className="bg-[#df94ff] p-2 rounded-lg">Checkout</button>
+          </div>
+          <div className="w-full flex justify-center p-2 pt-0">
+            <div className="w-11/12 lg:w-3/4 flex p-4 gap-4 items-center justify-end bg-[#121212] rounded-br-lg rounded-bl-lg">
+              <div className="text-white text-lg">
+                Total: ₹<span className="text-xl tracking-wider">{total}</span>
+              </div>
+              <button className="bg-[#df94ff] p-2 rounded-lg">Checkout</button>
+            </div>
           </div>
         </div>
       </div>
       <Popup isOpen={popupOpen} onClose={() => setPopupOpen(false)} />
+      <AddressPopup
+        isOpen={addressPopup}
+        setAddressPopup={setAddressPopup}
+        allAddress={allAddress}
+        setAddress={setAddress}
+      />
     </div>
   );
 }
