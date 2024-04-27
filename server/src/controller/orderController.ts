@@ -32,16 +32,6 @@ export const addOrder = async (
     const user: any = await UserModel.findById(decoded).select("cart").exec();
     for (let i = user.cart.length - 1; i >= 0; i--) {
       const product: any = await ProductModel.findById(user.cart[i].product);
-      const seller: any = await SellerModel.findById(product.seller._id);
-      await SellerModel.findByIdAndUpdate(product.seller._id, {
-        balance: seller.balance + (user.cart[i].quantity * product.price)},
-        {new:true});
-      await ProductModel.findByIdAndUpdate(user.cart[i].product,
-        {
-          soldStock:product.soldStock + user.cart[i].quantity,
-          stock:product.stock - user.cart[i].quantity,
-        },{new:true}
-      );
       const newOrder = new OrderModel({
         address:address,
         product: user.cart[i].product,
@@ -50,7 +40,7 @@ export const addOrder = async (
         user: decoded,
         order_id:order_id,
         totalPrice:Number(product.price*user.cart[i].quantity),
-        status:"Order placed"
+        status:"Payment Processing"
       });
       await newOrder.save();
     }
@@ -66,7 +56,99 @@ export const addOrder = async (
     return next(errorHandler(501, "Unauthorized access"));
   }
 };
+export const placeOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token, order_id,update_id } = req.body;
 
+  try {
+    const decoded: any = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) return undefined;
+        return result.id;
+      }
+    );
+
+    if (decoded === undefined) {
+      return next(errorHandler(501, "Unauthorized access"));
+    }
+    
+    const order = await OrderModel.find({ user: decoded, order_id: update_id });
+    for (let i = order.length - 1; i >= 0; i--)
+    {
+      if(order[i].status === "Payment Processing")
+        {
+          await OrderModel.findByIdAndUpdate(order[i]._id,{
+            order_id,
+            status:"order placed"
+          },{new:true});
+          const seller:any = await SellerModel.findById(order[i].seller._id);
+          await SellerModel.findByIdAndUpdate(order[i].seller._id,{
+            balance: seller.balance + (order[i].totalPrice)
+          },{new:true});
+          const product:any = await ProductModel.findById(order[i].product._id);
+          await ProductModel.findByIdAndUpdate(order[i].product._id,
+            {
+              soldStock:product.soldStock + order[i].quantity,
+              stock:product.stock - order[i].quantity,
+            },{new:true}
+          );
+        }
+    }
+    res.status(201).json({
+      success: true,
+      message: "Saved Order successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return next(errorHandler(501, "Unauthorized access"));
+  }
+};
+
+export const failedOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token,update_id } = req.body;
+
+  try {
+    const decoded: any = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) return undefined;
+        return result.id;
+      }
+    );
+
+    if (decoded === undefined) {
+      return next(errorHandler(501, "Unauthorized access"));
+    }
+    
+    const order = await OrderModel.find({ user: decoded, order_id: update_id });
+    for (let i = order.length - 1; i >= 0; i--)
+    {
+      if(order[i].status === "Payment Processing")
+        {
+          await OrderModel.findByIdAndUpdate(order[i]._id,{
+            status:"payment failed"
+          },{new:true});
+        }
+    }
+    res.status(201).json({
+      success: true,
+      message: "order failed to place",
+    });
+  } catch (err) {
+    console.log(err);
+    return next(errorHandler(501, "Unauthorized access"));
+  }
+};
 export const displayOrderOfUser = async (
   req: Request,
   res: Response,

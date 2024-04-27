@@ -88,6 +88,15 @@ export default function Cart() {
     }
     try {
       setLoading(true);
+      const randOrder = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      const response = await axios.post(
+        "http://localhost:3003/api/order/add-order",
+        {
+          token: token,
+          address: address,
+          order_id: randOrder,
+        }
+      );
       const {
         data: { order },
       } = await axios.post("http://localhost:3003/api/payment/checkout", {
@@ -112,7 +121,7 @@ export default function Cart() {
               razorpay_signature: response.razorpay_signature,
             }
           );
-          navigate(data + "/" + address);
+          navigate(data + "/" + randOrder);
         },
         prefill: {
           name: "Gaurav Kumar",
@@ -129,8 +138,14 @@ export default function Cart() {
       setLoading(false);
       var rzp1 = await new window.Razorpay(options);
       const ans = rzp1.open();
-      rzp1.on("payment.failed", function (response) {
+      rzp1.on("payment.failed",async(response) => {
         setError("PaymentFailed");
+        await axios.post("http://localhost:3003/api/order/order-failed",
+          {
+            token: token,
+            update_id: randOrder,
+          }
+        );
         return;
       });
     } catch (error) {
