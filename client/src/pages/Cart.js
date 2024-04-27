@@ -2,23 +2,27 @@ import axios from "axios";
 import { Trash } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 const Popup = ({ isOpen, onClose }) => {
   return (
     isOpen && (
       <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-50 flex justify-center items-center">
         <div className=" p-8 bg-[#030101] rounded-lg w-11/12 sm:w-[400px]">
           <p className="text-white">Items have been deleted from your cart</p>
-          <button
-            className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Close
-          </button>
+          <div className="w-11/12 flex justify-end">
+            <button
+              className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     )
   );
 };
+
 const AddressPopup = ({ isOpen, setAddressPopup, allAddress, setAddress }) => {
   const handleAddressClick = (e) => {
     setAddress(e.currentTarget.id);
@@ -67,12 +71,12 @@ export default function Cart() {
   const [address, setAddress] = useState("Select Address");
   const [allAddress, setAllAddress] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleAddressPopup = () => {
     setAddressPopup(true);
   };
   const checkoutHandler = async () => {
-    var resForServer = {};
     const token = window.localStorage.getItem("token");
     if (total == 0) {
       setError("cart is empty");
@@ -83,46 +87,52 @@ export default function Cart() {
       return;
     }
     try {
+      setLoading(true);
       const {
         data: { order },
       } = await axios.post("http://localhost:3003/api/payment/checkout", {
         token,
         amount: total,
       });
+
       var options = {
-        "key": "rzp_test_a21rZZodDCVb1S", 
-        "amount": order.amount, 
-        "currency": "INR",
-        "name": "Acme Corp",
-        "description": "Test Transaction",
-        "image": "",
-        "order_id": order.id,
-        "handler": async(response)=>{
-          const {data} = await axios.post("http://localhost:3003/api/payment/callBack",{
-              razorpay_payment_id:response.razorpay_payment_id,
-              razorpay_order_id:response.razorpay_order_id,
-              razorpay_signature:response.razorpay_signature,
-            });
-            navigate(data+"/"+address);
+        key: "rzp_test_a21rZZodDCVb1S",
+        amount: order.amount,
+        currency: "INR",
+        name: "Acme Corp",
+        description: "Test Transaction",
+        image: "",
+        order_id: order.id,
+        handler: async (response) => {
+          const { data } = await axios.post(
+            "http://localhost:3003/api/payment/callBack",
+            {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            }
+          );
+          navigate(data + "/" + address);
         },
-        "prefill": {
-            "name": "Gaurav Kumar",
-            "email": "gaurav.kumar@example.com",
-            "contact": "9000090000"
+        prefill: {
+          name: "Gaurav Kumar",
+          email: "gaurav.kumar@example.com",
+          contact: "9000090000",
         },
-        "notes": {
-            "address": "Razorpay Corporate Office"
+        notes: {
+          address: "Razorpay Corporate Office",
         },
-        "theme": {
-            "color": "#3399cc"
-        }
-    };
-    var rzp1 = await new window.Razorpay(options);
-    const ans = rzp1.open();
-    rzp1.on('payment.failed', function (response){
-      setError("PaymentFailed");
-      return;
-    });
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      setLoading(false);
+      var rzp1 = await new window.Razorpay(options);
+      const ans = rzp1.open();
+      rzp1.on("payment.failed", function (response) {
+        setError("PaymentFailed");
+        return;
+      });
     } catch (error) {
       console.log(error);
     }
@@ -156,7 +166,6 @@ export default function Cart() {
         { token: token }
       );
       setItems(response.data.cart);
-      console.log(response.data.cart);
       for (let element of response.data.cart) {
         total =
           total + Number(element.quantity) * Number(element.product.price);
@@ -200,6 +209,9 @@ export default function Cart() {
   useEffect(() => {
     fetchUserCart();
   }, [popupOpen]);
+
+  if (loading) return <Loading />;
+
   return (
     <div>
       <div className="py-20 bg-[#1f1f1f] min-h-screen h-fit flex flex-col items-center">
@@ -217,13 +229,13 @@ export default function Cart() {
                   key={_id}
                   className="flex rounded-lg bg-[#3b3b3b] p-4 mt-2 justify-between items-center "
                 >
-                  <div className="flex items-center w-5/12 lg:w-4/12 justify-between overflow-hidden">
-                    <div
-                      className="lg:h-24 lg:w-24 sm:h-20 sm:w-20 h-12 w-12 object-cover "
-                      onClick={() => {
-                        navigate(`/view-product/${element.product._id}`);
-                      }}
-                    >
+                  <div
+                    onClick={() => {
+                      navigate(`/view-product/${element.product._id}`);
+                    }}
+                    className="flex items-center w-5/12 lg:w-4/12 justify-between overflow-hidden"
+                  >
+                    <div className="lg:h-24 lg:w-24 sm:h-20 sm:w-20 h-12 w-12 object-cover ">
                       <img
                         className="w-full h-full rounded-lg "
                         src={element.product.images[0]}
@@ -269,9 +281,7 @@ export default function Cart() {
           </div>
           <div className="w-full flex justify-center p-2 pt-0">
             <div className="w-11/12 lg:w-3/4 flex p-4 gap-4 items-center justify-end bg-[#121212] rounded-br-lg rounded-bl-lg">
-              <div className="text-red-600">
-                {error}
-              </div>
+              <div className="text-red-600">{error}</div>
               <div className="text-white text-lg">
                 Total: ₹<span className="text-xl tracking-wider">{total}</span>
               </div>

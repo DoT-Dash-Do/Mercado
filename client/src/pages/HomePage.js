@@ -24,7 +24,6 @@ const HomePage = () => {
   };
 
   const handleProductNavigate = (e) => {
-    console.log(e.currentTarget.id);
     navigate(`/view-product/${e.currentTarget.id}`);
   };
 

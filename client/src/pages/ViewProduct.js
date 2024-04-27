@@ -8,12 +8,14 @@ const Popup = ({ isOpen, onClose }) => {
       <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-50 flex justify-center items-center">
         <div className=" p-8 bg-[#030101] rounded-lg">
           <p className="text-white">Items have been added to your cart</p>
-          <button
-            className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Close
-          </button>
+          <div className="w-11/12 flex justify-end">
+            <button
+              className="mt-4 bg-[#df94ff] hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -44,7 +46,6 @@ const ViewProduct = () => {
           productId: params.id,
         }
       );
-      console.log(response.data.product);
       if (response.data.product && response.data.product.images) {
         setProduct(response.data.product);
         setActiveImage(response.data.product.images[0]);
@@ -96,7 +97,7 @@ const ViewProduct = () => {
             />
           </div>
 
-          <div className="flex flex-row justify-between h-24 items-center gap-4">
+          <div className="flex flex-row justify-between h-24 items-center gap-4 select-none">
             {product.images &&
               product.images.map((element, _id) => {
                 return (
@@ -124,46 +125,54 @@ const ViewProduct = () => {
           </h1>
           <div className="h-44">
             <h1 className="text-sm text-white font-semibold">Description</h1>
-            <p className="text-xs text-white sm:max-w-[450px] max-h-40 overflow-auto items-center max-w-[450px]">
+            <p className="text-xs text-white sm:max-w-[450px] max-h-40 overflow-auto items-center max-w-[450px] style-3">
               {product.description}
             </p>
           </div>
-          <div className="flex flex-row items-center gap-12">
-            <div className="flex flex-row items-center">
-              <button
-                className="bg-gray-200 py-1 px-2 rounded-lg text-[#df94ff] text-sm sm:px-3"
-                onClick={() => changeAmount(-1, amount)}
-              >
-                -
-              </button>
-              <span className="text-white w-10 py-4 px-6 rounded-lg text-center sm:w-20">
-                {amount}
-              </span>
-              <button
-                className="bg-gray-200 py-1 px-2 rounded-lg text-[#df94ff] text-sm sm:px-3"
-                onClick={() => changeAmount(1, amount)}
-              >
-                +
-              </button>
+          {product.stock > 0 ? (
+            <div className="flex flex-row items-center gap-12">
+              <div className="flex flex-row items-center">
+                <button
+                  className="bg-gray-200 py-2 px-2 rounded-lg text-[#df94ff] text-sm sm:px-3"
+                  onClick={() => changeAmount(-1, amount)}
+                >
+                  -
+                </button>
+                <span className="text-white w-10 py-4 px-6 rounded-lg text-center sm:w-20">
+                  {amount}
+                </span>
+                <button
+                  className="bg-gray-200 py-2 px-2 rounded-lg text-[#df94ff] text-sm sm:px-3"
+                  onClick={() => changeAmount(1, amount)}
+                >
+                  +
+                </button>
+              </div>
+              {type === "user" && (
+                <button
+                  className="bg-[#df94ff] hover:bg-[#a995b2] text-black font-semibold py-2 px-6 rounded-xl text-sm"
+                  onClick={() => addToCart()}
+                >
+                  Add to Cart
+                </button>
+              )}
+              {(type === undefined || type !== "user") && (
+                <button
+                  className="bg-[#df94ff] text-black font-semibold py-2 px-6 rounded-xl text-sm disabled:bg-[#7e5b8e]"
+                  onClick={() => addToCart()}
+                  disabled
+                >
+                  Add to Cart
+                </button>
+              )}
             </div>
-            {type == "user" && (
-              <button
-                className="bg-[#df94ff] hover:bg-[#a995b2] text-white font-semibold py-1 px-6 rounded-xl text-sm"
-                onClick={() => addToCart()}
-              >
-                Add to Cart
-              </button>
-            )}
-            {(type == undefined || type != "user") && (
-              <button
-                className="bg-[#df94ff] text-white font-semibold py-1 px-6 rounded-xl text-sm disabled:bg-[#7e5b8e]"
-                onClick={() => addToCart()}
-                disabled
-              >
-                Add to Cart
-              </button>
-            )}
-          </div>
+          ) : (
+            <div className="text-2xl text-white flex">
+              <p className="border-b-2 border-[#df94ff] mb-4 ">
+                *Out of stock*
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <Popup isOpen={popupOpen} onClose={() => setPopupOpen(false)} />
