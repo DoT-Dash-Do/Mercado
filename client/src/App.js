@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import ViewProduct from "./pages/ViewProduct";
 import Address from "./pages/Address";
+import PaymentSuccess from "./pages/PaymentSuccess";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
@@ -73,6 +74,7 @@ function App() {
           <Route path="/view-orders" element={<Orders />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/userAddress" element = {<Address/>}/>
+          <Route path="/paymentsuccess/:order_id/:address" element={<PaymentSuccess/>}/>
         </Routes>
       </Router>
     </div>

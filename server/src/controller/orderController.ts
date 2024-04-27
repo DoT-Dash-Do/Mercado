@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import OrderModel from "../models/order";
+import UserModel from "../models/user";
+import ProductModel from "../models/product";
 import { errorHandler } from "../utils/error";
+import SellerModel from "../models/seller";
 dotenv.config();
 
 // recieve array from req.body
@@ -11,10 +14,10 @@ export const addOrder = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { token, address, products, totalPrice } = req.body;
+  const { token, address, order_id } = req.body;
 
   try {
-    const user: any = jwt.verify(
+    const decoded: any = jwt.verify(
       token,
       process.env.JWT_SECRET || "haklabaBuptis",
       (err: any, result: any) => {
@@ -23,24 +26,43 @@ export const addOrder = async (
       }
     );
 
-    if (user === undefined) {
+    if (decoded === undefined) {
       return next(errorHandler(501, "Unauthorized access"));
     }
-
-    const newOrder = new OrderModel({
-      address,
-      user,
-      products,
-      totalPrice,
-    });
-
-    await newOrder.save();
-
+    const user: any = await UserModel.findById(decoded).select("cart").exec();
+    for (let i = user.cart.length - 1; i >= 0; i--) {
+      const product: any = await ProductModel.findById(user.cart[i].product);
+      const seller: any = await SellerModel.findById(product.seller._id);
+      await SellerModel.findByIdAndUpdate(product.seller._id, {
+        balance: seller.balance + (user.cart[i].quantity * product.price)},
+        {new:true});
+      await ProductModel.findByIdAndUpdate(user.cart[i].product,
+        {
+          soldStock:product.soldStock + user.cart[i].quantity,
+          stock:product.stock - user.cart[i].quantity,
+        },{new:true}
+      );
+      const newOrder = new OrderModel({
+        address:address,
+        product: user.cart[i].product,
+        seller:product.seller._id,
+        quantity: user.cart[i].quantity,
+        user: decoded,
+        order_id:order_id,
+        totalPrice:Number(product.price*user.cart[i].quantity),
+        status:"Order placed"
+      });
+      await newOrder.save();
+    }
+    await UserModel.findByIdAndUpdate(decoded,{
+      cart:[]
+    },{new:true});
     res.status(201).json({
       success: true,
       message: "Saved Order successfully",
     });
   } catch (err) {
+    console.log(err);
     return next(errorHandler(501, "Unauthorized access"));
   }
 };

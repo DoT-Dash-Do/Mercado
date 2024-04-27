@@ -61,16 +61,72 @@ const AddressPopup = ({ isOpen, setAddressPopup, allAddress, setAddress }) => {
 export default function Cart() {
   const navigate = useNavigate();
   const [items, setItems] = useState();
-  const [total, setTotal] = useState();
+  const [total, setTotal] = useState(0);
   const [popupOpen, setPopupOpen] = useState(false);
   const [addressPopup, setAddressPopup] = useState(false);
   const [address, setAddress] = useState("Select Address");
   const [allAddress, setAllAddress] = useState([]);
+  const [error, setError] = useState("");
 
   const handleAddressPopup = () => {
     setAddressPopup(true);
   };
-
+  const checkoutHandler = async () => {
+    var resForServer = {};
+    const token = window.localStorage.getItem("token");
+    if (total == 0) {
+      setError("cart is empty");
+      return;
+    }
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const {
+        data: { order },
+      } = await axios.post("http://localhost:3003/api/payment/checkout", {
+        token,
+        amount: total,
+      });
+      var options = {
+        "key": "rzp_test_a21rZZodDCVb1S", 
+        "amount": order.amount, 
+        "currency": "INR",
+        "name": "Acme Corp",
+        "description": "Test Transaction",
+        "image": "",
+        "order_id": order.id,
+        "handler": async(response)=>{
+          const {data} = await axios.post("http://localhost:3003/api/payment/callBack",{
+              razorpay_payment_id:response.razorpay_payment_id,
+              razorpay_order_id:response.razorpay_order_id,
+              razorpay_signature:response.razorpay_signature,
+            });
+            navigate(data+"/"+address);
+        },
+        "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com",
+            "contact": "9000090000"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = await new window.Razorpay(options);
+    const ans = rzp1.open();
+    rzp1.on('payment.failed', function (response){
+      setError("PaymentFailed");
+      return;
+    });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const deleteFromCart = async (product) => {
     try {
       const token = window.localStorage.getItem("token");
@@ -112,25 +168,29 @@ export default function Cart() {
   };
 
   const fetchAllAddress = async () => {
-    const token = window.localStorage.getItem("token");
+    try {
+      const token = window.localStorage.getItem("token");
 
-    const response = await axios.post(
-      "http://localhost:3003/api/address/display-all-addresses",
-      {
-        token,
-      }
-    );
+      const response = await axios.post(
+        "http://localhost:3003/api/address/display-all-addresses",
+        {
+          token,
+        }
+      );
 
-    setAllAddress(response.data.addresses);
-    setAddress(
-      response.data.addresses[0].houseNo +
-        ", " +
-        response.data.addresses[0].street +
-        ", " +
-        response.data.addresses[0].city +
-        ", " +
-        response.data.addresses[0].state
-    );
+      setAllAddress(response.data.addresses);
+      setAddress(
+        response.data.addresses[0].houseNo +
+          ", " +
+          response.data.addresses[0].street +
+          ", " +
+          response.data.addresses[0].city +
+          ", " +
+          response.data.addresses[0].state
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -209,10 +269,18 @@ export default function Cart() {
           </div>
           <div className="w-full flex justify-center p-2 pt-0">
             <div className="w-11/12 lg:w-3/4 flex p-4 gap-4 items-center justify-end bg-[#121212] rounded-br-lg rounded-bl-lg">
+              <div className="text-red-600">
+                {error}
+              </div>
               <div className="text-white text-lg">
                 Total: ₹<span className="text-xl tracking-wider">{total}</span>
               </div>
-              <button className="bg-[#df94ff] p-2 rounded-lg">Checkout</button>
+              <button
+                className="bg-[#df94ff] p-2 rounded-lg"
+                onClick={checkoutHandler}
+              >
+                Checkout
+              </button>
             </div>
           </div>
         </div>

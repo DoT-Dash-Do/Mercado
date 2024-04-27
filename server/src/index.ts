@@ -8,6 +8,7 @@ import orderRouter from "./routes/orderRoutes";
 import productRouter from "./routes/productRoutes";
 import sellerRouter from "./routes/sellerRoutes";
 import userRouter from "./routes/userRoutes";
+import paymentRouter from "./routes/paymentRoutes"
 import { CustomError } from "./types/customError";
 dotenv.config();
 
@@ -33,7 +34,7 @@ app.use("/api/seller", sellerRouter);
 app.use("/api/product", productRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
-
+app.use("/api/payment",paymentRouter);
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
