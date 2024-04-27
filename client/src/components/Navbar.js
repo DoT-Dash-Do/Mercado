@@ -10,7 +10,6 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
   );
 
   useEffect(() => {
-    console.log("working");
     if (profilePic !== null) {
       setDisplayPP(profilePic);
     } else {
@@ -55,9 +54,9 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
     window.localStorage.removeItem("type");
     navigate("/login");
   };
-  const openCart =()=>{
-    navigate("/cart")
-  }
+  const openCart = () => {
+    navigate("/cart");
+  };
   return (
     <>
       <div className="fixed top-0 z-50 w-full h-16 bg-[#121212] text-white select-none flex justify-between text-base">
@@ -97,7 +96,7 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
               <div
                 title="Cart"
                 className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
-                onClick={()=>openCart()}
+                onClick={() => openCart()}
               >
                 <ShoppingCartSimple size={24} />
               </div>

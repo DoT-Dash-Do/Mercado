@@ -24,7 +24,6 @@ const HomePage = () => {
   };
 
   const handleProductNavigate = (e) => {
-    console.log(e.currentTarget.id);
     navigate(`/view-product/${e.currentTarget.id}`);
   };
 
@@ -46,7 +45,7 @@ const HomePage = () => {
         </div>
       )}
 
-      <div className="pt-16  w-full h-screen enableScrol bg-[#1f1f1f] enableScroll">
+      <div className="pt-16  w-full h-screen bg-[#1f1f1f] enableScroll">
         <div className="w-full flex justify-center p-4">
           <div className="w-full flex justify-between items-center text-white select-none">
             <div
