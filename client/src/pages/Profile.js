@@ -8,9 +8,10 @@ import {
   PencilSimple,
 } from "phosphor-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditPopup from "../components/EditPopup";
 import PasswordPop from "../components/PasswordPopup";
-import { useNavigate } from "react-router-dom";
+import ProfilePopup from "../components/ProfilePopup";
 
 const Profile = () => {
   const navig = useNavigate();
@@ -20,10 +21,11 @@ const Profile = () => {
   const [passPop, setPassPop] = useState("");
   const [fieldType, setType] = useState("");
   const [userData, setUserData] = useState({});
+  const [profilePop, setProfilePop] = useState(false);
   const token = window.localStorage.getItem("token");
-  const handleNavigation = ()=>{
+  const handleNavigation = () => {
     navig("/userAddress");
-  }
+  };
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await axios.post(
@@ -72,7 +74,7 @@ const Profile = () => {
 
     if (window.localStorage.getItem("type") === "user") fetchUserData();
     if (window.localStorage.getItem("type") === "seller") fetchSellerData();
-  }, [popVisible]);
+  }, [popVisible, profilePop]);
 
   const handleUsernamePopup = () => {
     setPopPlaceholder("Username");
@@ -95,6 +97,11 @@ const Profile = () => {
     setPassPop(!passPop);
   };
 
+  const handleProfilePicPopup = () => {
+    setPopPlaceholder("Profile");
+    setProfilePop(!profilePop);
+  };
+
   return (
     <div>
       <div className="pt-16 bg-[#1f1f1f] h-screen lg:flex text-white enableScroll">
@@ -111,6 +118,14 @@ const Profile = () => {
             passPop={passPop}
             setPassPop={setPassPop}
             popPlaceholder={popPlaceholder}
+          />
+        )}
+        {profilePop && (
+          <ProfilePopup
+            profilePop={profilePop}
+            setProfilePop={setProfilePop}
+            popPlaceholder={popPlaceholder}
+            profilePic={userData.profilePic}
           />
         )}
 
@@ -175,12 +190,18 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="flex w-full justify-center items-center p-2">
+            <div className="flex w-full justify-center items-center p-2 gap-8">
               <div
                 onClick={handlePasswordPopup}
-                className="p-2 text-md md:text-lg border-2 rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-40 text-center"
+                className="p-2 text-md md:text-lg border-2 rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-52 text-center"
               >
-                Edit password
+                Change Password
+              </div>
+              <div
+                onClick={handleProfilePicPopup}
+                className="p-2 text-md md:text-lg border-2 rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-44 text-center"
+              >
+                Edit ProfilePic
               </div>
             </div>
           </div>
@@ -210,7 +231,10 @@ const Profile = () => {
                   <Money className="text-lg sm:text-xl lg:text-2xl" />
                 </div>
               </div>
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center" onClick={handleNavigation}>
+              <div
+                className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                onClick={handleNavigation}
+              >
                 <div>Address</div>
                 <div>
                   <At className="text-lg sm:text-xl lg:text-2xl" />
