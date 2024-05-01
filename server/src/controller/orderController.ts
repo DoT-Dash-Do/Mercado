@@ -149,6 +149,7 @@ export const failedOrder = async (
     return next(errorHandler(501, "Unauthorized access"));
   }
 };
+
 export const displayOrderOfUser = async (
   req: Request,
   res: Response,
@@ -207,3 +208,4 @@ export const displaySingleOrder = async (
     return next(errorHandler(501, "Unauthorized Access"));
   }
 };
+
