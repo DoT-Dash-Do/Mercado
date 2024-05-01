@@ -1,8 +1,12 @@
-import { PieChart } from "@mui/x-charts/PieChart";
-import { Bank, CirclesThreePlus } from "phosphor-react";
-import React from "react";
+
+import React, { useEffect } from "react";
+import { CirclesThreePlus, Bank } from "phosphor-react";
 import { Link } from "react-router-dom";
+import { PieChart } from "@mui/x-charts/PieChart";
 export default function SellerDashoard() {
+  useEffect(
+    fetchDetails()
+  );
   return (
     <div className="pt-16 min-h-screen bg-[#1f1f1f] flex flex-col items-center">
       <div className="border-b w-11/12 p-2 flex justify-between select-none items-end">
@@ -98,6 +102,7 @@ export default function SellerDashoard() {
               Deep Analysis
             </button>
           </div>
+
         </div>
         <div className="flex flex-col justify-between sm:min-h-[20em] lg:flex-row">
           <div className="lg:w-6/12 p-2">
@@ -135,8 +140,8 @@ export default function SellerDashoard() {
           <div className="lg:w-6/12 p-2">
             <div className="flex flex-col bg-[#3e3e3e] rounded-lg p-4 h-[30em] sm:h-[20em] justify-center">
               <h1 className="text-white">Orders analysis</h1>
-              <PieChart
-                className="flex-row"
+
+              <PieChart className="flex-row"
                 series={[
                   {
                     data: [
