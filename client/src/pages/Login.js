@@ -72,8 +72,7 @@ const Login = ({ setToken }) => {
       setError(err.response.data.message);
       return;
     }
-
-    navigate("/");
+    navigate("/Dashboard");
   };
 
   const handleUserLogin = async (e) => {
