@@ -135,6 +135,7 @@ export default function SellerDashoard() {
           <div className="lg:w-6/12 p-2">
             <div className="flex flex-col bg-[#3e3e3e] rounded-lg p-4 h-[30em] sm:h-[20em] justify-center">
               <h1 className="text-white">Orders analysis</h1>
+
               <PieChart
                 className="flex-row"
                 series={[
