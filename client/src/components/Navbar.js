@@ -10,12 +10,12 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
   );
 
   useEffect(() => {
-    if (profilePic !== null) {
-      setDisplayPP(profilePic);
-    } else {
+    if (profilePic === null || profilePic === undefined || profilePic === "") {
       setDisplayPP(
         "https://i.pinimg.com/736x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg"
       );
+    } else {
+      setDisplayPP(profilePic);
     }
   }, [profilePic]);
 

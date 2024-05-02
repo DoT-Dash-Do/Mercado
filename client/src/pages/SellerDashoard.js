@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { CirclesThreePlus, Bank } from "phosphor-react";
-import { Link } from "react-router-dom";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Bank, CirclesThreePlus } from "phosphor-react";
+import { default as React, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 export default function SellerDashoard() {
   const [orders, setOrders] = useState([]);
-  const [dashboardDetails,setDetails] = useState({
-    username:"seller",
-    balance:0,
-    products:0
+  const [dashboardDetails, setDetails] = useState({
+    username: "seller",
+    balance: 0,
+    products: 0,
   });
   const [chartData, setChartData] = useState([]);
-  const [sale,setSale] = useState(0);
+  const [sale, setSale] = useState(0);
   const navigate = useNavigate();
   const fetchDetails = async () => {
     const seller = window.localStorage.getItem("token");
@@ -23,7 +23,7 @@ export default function SellerDashoard() {
     }
     try {
       var itemsSold = 0;
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3003/api/seller/get-dashboard-details",
         { token: seller }
       );
@@ -94,7 +94,7 @@ export default function SellerDashoard() {
                 </Link>
               </div>
               <div className="p-4 text-5xl text-[#df94ff] select-none truncate">
-               {dashboardDetails.balance}
+                {dashboardDetails.balance}
               </div>
             </div>
           </div>
@@ -143,9 +143,12 @@ export default function SellerDashoard() {
             </button>
           </div>
           <div className="p-2 lg:w-1/4">
-            <button className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full" onClick={()=>{
-              navigate("/sellerProducts")
-            }}>
+            <button
+              className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full"
+              onClick={() => {
+                navigate("/sellerProducts");
+              }}
+            >
               Update Products
             </button>
           </div>
@@ -201,6 +204,7 @@ export default function SellerDashoard() {
           <div className="lg:w-6/12 p-2">
             <div className="flex flex-col bg-[#3e3e3e] rounded-lg p-4 h-[30em] sm:h-[20em] justify-center">
               <h1 className="text-white">Orders analysis</h1>
+
               {orders.length === 0 && (
                 <div className="text-white p-2">No Orders placed Yet</div>
               )}
