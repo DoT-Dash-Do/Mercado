@@ -88,7 +88,9 @@ export default function Cart() {
     }
     try {
       setLoading(true);
-      const randOrder = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      const randOrder =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
       const response = await axios.post(
         "http://localhost:3003/api/order/add-order",
         {
@@ -138,14 +140,12 @@ export default function Cart() {
       setLoading(false);
       var rzp1 = await new window.Razorpay(options);
       const ans = rzp1.open();
-      rzp1.on("payment.failed",async(response) => {
+      rzp1.on("payment.failed", async (response) => {
         setError("PaymentFailed");
-        await axios.post("http://localhost:3003/api/order/order-failed",
-          {
-            token: token,
-            update_id: randOrder,
-          }
-        );
+        await axios.post("http://localhost:3003/api/order/order-failed", {
+          token: token,
+          update_id: randOrder,
+        });
         return;
       });
     } catch (error) {
@@ -171,7 +171,8 @@ export default function Cart() {
   };
   const fetchUserCart = async () => {
     const token = window.localStorage.getItem("token");
-    if (!token) {
+    const type = window.localStorage.getItem("type");
+    if (!token || type !== "user") {
       return navigate("/login");
     }
     try {
@@ -187,7 +188,7 @@ export default function Cart() {
       }
       setTotal(total);
     } catch (error) {
-      console.log(error);
+      console.log("Error");
     }
   };
 
@@ -203,15 +204,17 @@ export default function Cart() {
       );
 
       setAllAddress(response.data.addresses);
-      setAddress(
-        response.data.addresses[0].houseNo +
-          ", " +
-          response.data.addresses[0].street +
-          ", " +
-          response.data.addresses[0].city +
-          ", " +
-          response.data.addresses[0].state
-      );
+      if (!response.data.addresses) {
+        setAddress(
+          response.data.addresses[0]?.houseNo +
+            ", " +
+            response.data.addresses[0]?.street +
+            ", " +
+            response.data.addresses[0]?.city +
+            ", " +
+            response.data.addresses[0]?.state
+        );
+      }
     } catch (error) {
       console.log(error);
     }

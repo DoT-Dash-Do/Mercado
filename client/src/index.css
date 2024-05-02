@@ -36,3 +36,12 @@
 .style-3::-webkit-scrollbar-thumb {
   background-color: #000000;
 }
+
+input[type="number"] {
+  appearance: textfield;
+}
+
+input[type="number"]:focus,
+input[type="number"]:hover {
+  appearance: textfield;
+}
