@@ -13,6 +13,7 @@ import ViewProduct from "./pages/ViewProduct";
 import Address from "./pages/Address";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import SellerDashoard from "./pages/SellerDashoard";
+import UpdateProduct from "./pages/UpdateProduct";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
@@ -77,6 +78,7 @@ function App() {
           <Route path="/userAddress" element = {<Address/>}/>
           <Route path="/paymentsuccess/:order_id/:address" element={<PaymentSuccess/>}/>
           <Route path="/Dashboard" element={<SellerDashoard/>}/>
+          <Route path="/sellerProducts" element={<UpdateProduct/>}/>
         </Routes>
       </Router>
     </div>

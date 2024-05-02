@@ -136,3 +136,34 @@ export const fetchProducts = async (
   }
 }
 
+export const fetchDashBoardDetails = async(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) =>{
+  const {token} = req.body;
+  try {
+    if (req.body.token == undefined)
+      return next(errorHandler(401, "unAuthenticated"));
+  
+    const decoded: any = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) return false;
+        return result.id;
+      }
+    );
+    const seller:any = await Seller.findById(decoded).select('balance username');
+    const products:any = await Product.find({seller:decoded});
+    
+    res.status(200).json({data:{
+      username:seller.username,
+      balance:seller.balance,
+      products:products.length
+    }});
+  } catch (error) {
+    next(errorHandler(500,"not able to find seller"));
+  }
+}
+
