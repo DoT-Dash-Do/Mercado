@@ -5,10 +5,11 @@ import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import addressRouter from "./routes/addressRoutes";
 import orderRouter from "./routes/orderRoutes";
+import paymentRouter from "./routes/paymentRoutes";
 import productRouter from "./routes/productRoutes";
+import reviewRouter from "./routes/reviewRoutes";
 import sellerRouter from "./routes/sellerRoutes";
 import userRouter from "./routes/userRoutes";
-import paymentRouter from "./routes/paymentRoutes"
 import { CustomError } from "./types/customError";
 dotenv.config();
 
@@ -34,7 +35,8 @@ app.use("/api/seller", sellerRouter);
 app.use("/api/product", productRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/payment",paymentRouter);
+app.use("/api/payment", paymentRouter);
+app.use("/api/review", reviewRouter);
 app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";

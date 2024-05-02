@@ -209,3 +209,31 @@ export const displaySingleOrder = async (
   }
 };
 
+export const displayOrderOfSeller = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+  try {
+    const seller = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, data: any) => {
+        if (err) return undefined;
+        else return data.id;
+      }
+    );
+
+    if (seller === undefined) {
+      return next(errorHandler(501, "Unauthorized Access"));
+    }
+
+    const orders = await OrderModel.find({ seller }).populate("product");
+
+    res.status(201).json({ orders });
+  } catch (err) {
+    return next(errorHandler(501, "Unauthorized Access"));
+  }
+};
+

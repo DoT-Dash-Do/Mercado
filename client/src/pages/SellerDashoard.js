@@ -1,15 +1,69 @@
 import { PieChart } from "@mui/x-charts/PieChart";
+import axios from "axios";
 import { Bank, CirclesThreePlus } from "phosphor-react";
-import React from "react";
-import { Link } from "react-router-dom";
+import { default as React, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 export default function SellerDashoard() {
+  const [orders, setOrders] = useState([]);
+  const [dashboardDetails, setDetails] = useState({
+    username: "seller",
+    balance: 0,
+    products: 0,
+  });
+  const [chartData, setChartData] = useState([]);
+  const [sale, setSale] = useState(0);
+  const navigate = useNavigate();
+  const fetchDetails = async () => {
+    const seller = window.localStorage.getItem("token");
+    const type = window.localStorage.getItem("type");
+    if (seller === undefined || type != "seller" || type === undefined) {
+      navigate("/login");
+      return;
+    }
+    try {
+      var itemsSold = 0;
+      const { data } = await axios.post(
+        "http://localhost:3003/api/seller/get-dashboard-details",
+        { token: seller }
+      );
+      setDetails(data.data);
+      const response = await axios.post(
+        "http://localhost:3003/api/order/fetch-seller-order",
+        { token: seller }
+      );
+      setOrders(response.data.orders);
+      let chart = new Map();
+
+      response.data.orders.forEach((element) => {
+        var quant = element.quantity;
+        itemsSold = itemsSold + quant;
+        if (chart.get(element.product.type)) {
+          quant = element.quantity + chart.get(element.product.type);
+        }
+        chart.set(element.product.type, quant);
+      });
+      const mapEntriesArray = Array.from(chart.entries());
+
+      const arrayOfObjects = mapEntriesArray.map(([label, value], index) => {
+        return { index, label, value };
+      });
+      setSale(itemsSold);
+      setChartData(arrayOfObjects);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchDetails();
+  }, []);
   return (
     <div className="pt-16 min-h-screen bg-[#1f1f1f] flex flex-col items-center">
       <div className="border-b w-11/12 p-2 flex justify-between select-none items-end">
         <p className="text-[#df94ff] text-3xl lg:text-5xl w-3/4 lg:w-1/2 truncate">
-          Welcome, Seller
+          Welcome, {dashboardDetails.username}
         </p>
-        <div className="flex gap-4 items-end">
+        <div className="flex gap-4">
           <button
             className="text-white text-xl p-1 rounded-lg hover:bg-[#484848] flex text-center items-center gap-1"
             title="add product"
@@ -40,7 +94,7 @@ export default function SellerDashoard() {
                 </Link>
               </div>
               <div className="p-4 text-5xl text-[#df94ff] select-none truncate">
-                100000000
+                {dashboardDetails.balance}
               </div>
             </div>
           </div>
@@ -52,11 +106,11 @@ export default function SellerDashoard() {
                   to="#"
                   className="text-sm font-medium text-[#df94ff] hover:underline "
                 >
-                  Withdraw
+                  Manage
                 </Link>
               </div>
               <div className="p-4 text-5xl text-[#df94ff] select-none truncate">
-                100000000
+                {sale}
               </div>
             </div>
           </div>
@@ -65,14 +119,14 @@ export default function SellerDashoard() {
               <div className="flex items-center justify-between">
                 <h5 className="text-xl text-white font-bold">Total Products</h5>
                 <Link
-                  to="#"
+                  to="/sellerProducts"
                   className="text-sm font-medium text-[#df94ff] hover:underline "
                 >
                   View
                 </Link>
               </div>
               <div className="p-4 text-5xl text-[#df94ff] select-none truncate">
-                100000000
+                {dashboardDetails.products}
               </div>
             </div>
           </div>
@@ -89,7 +143,12 @@ export default function SellerDashoard() {
             </button>
           </div>
           <div className="p-2 lg:w-1/4">
-            <button className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full">
+            <button
+              className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full"
+              onClick={() => {
+                navigate("/sellerProducts");
+              }}
+            >
               Update Products
             </button>
           </div>
@@ -101,7 +160,7 @@ export default function SellerDashoard() {
         </div>
         <div className="flex flex-col justify-between sm:min-h-[20em] lg:flex-row">
           <div className="lg:w-6/12 p-2">
-            <div className="p-4 rounded-lg shadow bg-[#3e3e3e] min-h-[20em]">
+            <div className="p-4 rounded-lg shadow bg-[#3e3e3e] max-h-[20em]">
               <div className="flex items-center justify-between">
                 <h5 className="text-xl font-bold leading-none text-white">
                   Latest Orders
@@ -113,21 +172,31 @@ export default function SellerDashoard() {
                   View All
                 </Link>
               </div>
-              <div className="">
+              <div className="overflow-auto h-[17em]">
                 <ul className="divide-y divide-gray-200 h-fill overflow-auto style-3 p-2">
-                  <li className="p-2">
-                    <div className="flex items-center">
-                      <div className="flex-1">
-                        <p className="text-xl text-white truncate ">Berserk</p>
-                        <p className="text-sm text-[#aeaeae] truncate ">
-                          Order Placed
-                        </p>
-                      </div>
-                      <div className="inline-flex items-center text-base font-semibold text-white">
-                        780
-                      </div>
-                    </div>
-                  </li>
+                  {orders.length === 0 && (
+                    <div className="text-white p-2">NO ORDERS PLACED YET</div>
+                  )}
+                  {orders.length > 0 &&
+                    orders.map((element, _id) => {
+                      return (
+                        <li className="p-2">
+                          <div className="flex items-center" key="_id">
+                            <div className="flex-1">
+                              <p className="text-xl text-white truncate ">
+                                {element.product.ProductName}
+                              </p>
+                              <p className="text-sm text-[#aeaeae] truncate ">
+                                {element.status}
+                              </p>
+                            </div>
+                            <div className="inline-flex items-center text-base font-semibold text-white">
+                              ₹ {element.totalPrice}
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </div>
@@ -136,15 +205,14 @@ export default function SellerDashoard() {
             <div className="flex flex-col bg-[#3e3e3e] rounded-lg p-4 h-[30em] sm:h-[20em] justify-center">
               <h1 className="text-white">Orders analysis</h1>
 
+              {orders.length === 0 && (
+                <div className="text-white p-2">No Orders placed Yet</div>
+              )}
               <PieChart
                 className="flex-row"
                 series={[
                   {
-                    data: [
-                      { id: 0, value: 10, label: "series A" },
-                      { id: 1, value: 15, label: "series B" },
-                      { id: 2, value: 20, label: "series C" },
-                    ],
+                    data: chartData,
                     innerRadius: 30,
                     outerRadius: 100,
                     paddingAngle: 5,
@@ -157,7 +225,7 @@ export default function SellerDashoard() {
         </div>
       </div>
       <div className="bg-black w-11/12 bottom-0 mb-2 lg:fixed text-white text-2xl p-4 rounded-lg backdrop-blur-lg">
-        You currently have 16 orders to be delivered
+        You currently have {orders.length} orders to be delivered
       </div>
     </div>
   );

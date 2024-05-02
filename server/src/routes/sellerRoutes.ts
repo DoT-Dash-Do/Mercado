@@ -8,6 +8,7 @@ import {
 } from "../controller/sellerAuthController";
 import {
   createProduct,
+  fetchDashBoardDetails,
   fetchProducts,
   updateSeller,
 } from "../controller/sellerController";
@@ -21,4 +22,5 @@ router.post("/uploadProduct", createProduct);
 router.post("/get-seller-data", getSellerData);
 router.post("/fetch-products", fetchProducts);
 router.post("/get-profile-pic", getSellerProfilePic);
+router.post("/get-dashboard-details",fetchDashBoardDetails);
 export default router;
