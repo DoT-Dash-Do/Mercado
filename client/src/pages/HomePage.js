@@ -83,7 +83,7 @@ const HomePage = () => {
                   <div className="text-xs flex items-center w-1/3">
                     {product.type}
                   </div>
-                  <div className="text-lg flex items-center w-2/3">
+                  <div className="text-lg flex items-center w-11/12 truncate">
                     {product.ProductName}
                   </div>
                 </div>
