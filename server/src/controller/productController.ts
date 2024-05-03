@@ -37,53 +37,6 @@ export const fetchSingleProduct = async (
   }
 };
 
-export const addProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { token, ProductName, price, type, images, stock, description } =
-    req.body;
-
-  try {
-    const seller = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "haklabaBuptis",
-      (err: any, data: any) => {
-        if (err) {
-          return undefined;
-        } else {
-          return data.id;
-        }
-      }
-    );
-
-    if (seller === undefined) {
-      return next(errorHandler(501, "Unauthorized Access"));
-    }
-
-    const newProduct = new ProductModel({
-      ProductName: ProductName,
-      price,
-      type,
-      images,
-      stock,
-      soldStock: 0,
-      description,
-      seller,
-    });
-
-    await newProduct.save();
-
-    return res.status(201).json({
-      success: true,
-      message: "New Product Created",
-    });
-  } catch (err) {
-    return next(errorHandler(501, "Unauthorized Access"));
-  }
-};
-
 export const deleteProduct = async (
   req: Request,
   res: Response,
@@ -123,11 +76,18 @@ export const updateProduct = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { token, productId, updatedField } = req.body;
+  const {
+    ProductName,
+    price,
+    type,
+    description,
+    images,
+    stock,
+    productId,
+    token,
+  } = req.body;
 
   try {
-    const fieldToUpdate = req.params.id;
-
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "haklabaBuptis",
@@ -140,23 +100,14 @@ export const updateProduct = async (
       return next(errorHandler(501, "Unauthorized access"));
     }
 
-    if (updatedField === "") {
-      return next(errorHandler(404, "the field cannot be empty"));
-    }
-
-    if (productId === "") {
-      return next(errorHandler(404, "Address to update was not provided"));
-    }
-
     await ProductModel.findByIdAndUpdate(
-      { _id: productId },
-      { [fieldToUpdate]: updatedField },
+      productId,
+      { ProductName, price, type, description, images, stock },
       { new: true }
     );
 
     return res.status(201).json({
-      success: true,
-      message: "Updated the address successfully",
+      message: "Successfully Updated",
     });
   } catch (err) {
     return next(errorHandler(501, "Unauthorized access"));

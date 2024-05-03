@@ -17,7 +17,7 @@ export default function SellerDashoard() {
   const fetchDetails = async () => {
     const seller = window.localStorage.getItem("token");
     const type = window.localStorage.getItem("type");
-    if (seller === undefined || type != "seller" || type === undefined) {
+    if (seller === undefined || type !== "seller" || type === undefined) {
       navigate("/login");
       return;
     }
@@ -69,7 +69,12 @@ export default function SellerDashoard() {
             title="add product"
           >
             <CirclesThreePlus size={30} />
-            <div className="hidden lg:block">Add Product</div>
+            <div
+              onClick={() => navigate("/add-product")}
+              className="hidden lg:block"
+            >
+              Add Product
+            </div>
           </button>
           <button
             className="text-white text-xl p-1  rounded-lg hover:bg-[#484848] flex text-center items-center gap-1"
@@ -180,7 +185,7 @@ export default function SellerDashoard() {
                   {orders.length > 0 &&
                     orders.map((element, _id) => {
                       return (
-                        <li className="p-2">
+                        <li key={_id} className="p-2">
                           <div className="flex items-center" key="_id">
                             <div className="flex-1">
                               <p className="text-xl text-white truncate ">

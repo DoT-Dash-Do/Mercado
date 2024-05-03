@@ -1,5 +1,7 @@
 import axios from "axios";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
+import { FaRegStar, FaStar } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Popup = ({ isOpen, onClose }) => {
@@ -29,6 +31,7 @@ const ViewProduct = () => {
   const [amount, setAmount] = useState(1);
   const [activeImg, setActiveImage] = useState("");
   const [type, setType] = useState("");
+  const [reviews, setReviews] = useState([]);
   const [popupOpen, setPopupOpen] = useState(false);
   const changeAmount = (val, amt) => {
     if (val === -1 && amount > 0) {
@@ -57,8 +60,20 @@ const ViewProduct = () => {
       console.log(error);
     }
   };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3003/api/review/fetch-reviews/${params.id}`
+      );
+      setReviews(response.data.reviews);
+    } catch (err) {
+      console.log("Authentication failed");
+    }
+  };
   useEffect(() => {
     fetchProduct();
+    fetchReviews();
   }, []);
 
   const addToCart = async () => {
@@ -87,13 +102,13 @@ const ViewProduct = () => {
   return (
     <div className="h-fit min-h-screen bg-[#1f1f1f] pt-16">
       {/* parent-div */}
-      <div className="flex flex-col justify-between mt-20 md:mt-36 lg:flex-row gap-16 lg:justify-items-center">
+      <div className="flex flex-col justify-between mt-20 md:mt-36 lg:flex-row gap-16 lg:justify-items-center mb-12">
         <div className="flex flex-col gap-6 lg:w-2/4 items-center justify-center">
           <div className=" h-[320px] w-[320px] sm:h-[450px] sm:w-[450px]">
             <img
               src={activeImg}
-              alt=""
-              className="h-full w-full self-center rounded-xl object-cover"
+              alt="loading"
+              className="h-full w-full self-center rounded-xl object-contain"
             />
           </div>
 
@@ -104,8 +119,8 @@ const ViewProduct = () => {
                   <img
                     key={_id}
                     src={element}
-                    alt="bhup"
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-md cursor-pointer object-cover"
+                    alt="loading"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-md cursor-pointer object-contain border-2 border-gray-400"
                     onClick={() => setActiveImage(element)}
                   />
                 );
@@ -176,6 +191,78 @@ const ViewProduct = () => {
         </div>
       </div>
       <Popup isOpen={popupOpen} onClose={() => setPopupOpen(false)} />
+
+      <div className="w-full text-white p-4 flex flex-col items-center">
+        <h1 className="border-b-2 border-gray-400 text-3xl mb-4 w-full xl:w-3/4">
+          Reviews
+        </h1>
+        {/* Review Card */}
+        {reviews.length === 0 && <div>No Reviews found</div>}
+        {reviews.map((review) => {
+          return (
+            <div
+              key={review._id}
+              className="bg-[#323232] p-2 rounded-lg mb-2 w-3/4 w-full xl:w-3/4"
+            >
+              <div className="flex justify-between items-center mb-2">
+                {/* Stars */}
+                <div className="flex gap-1 text-lg md:text-2xl">
+                  {review.rating >= 1 ? (
+                    <div className=" p-1 text-[#df94ff]  rounded-full">
+                      <FaStar />
+                    </div>
+                  ) : (
+                    <div className=" p-1  rounded-full">
+                      <FaRegStar />
+                    </div>
+                  )}
+                  {review.rating >= 2 ? (
+                    <div className=" p-1 text-[#df94ff]  rounded-full">
+                      <FaStar />
+                    </div>
+                  ) : (
+                    <div className=" p-1  rounded-full">
+                      <FaRegStar />
+                    </div>
+                  )}
+                  {review.rating >= 3 ? (
+                    <div className=" p-1 text-[#df94ff]  rounded-full">
+                      <FaStar />
+                    </div>
+                  ) : (
+                    <div className=" p-1  rounded-full">
+                      <FaRegStar />
+                    </div>
+                  )}
+                  {review.rating >= 4 ? (
+                    <div className=" p-1 text-[#df94ff]  rounded-full">
+                      <FaStar />
+                    </div>
+                  ) : (
+                    <div className=" p-1  rounded-full">
+                      <FaRegStar />
+                    </div>
+                  )}
+                  {review.rating >= 5 ? (
+                    <div className=" p-1 text-[#df94ff]  rounded-full">
+                      <FaStar />
+                    </div>
+                  ) : (
+                    <div className=" p-1  rounded-full">
+                      <FaRegStar />
+                    </div>
+                  )}
+                </div>
+                <div className="text-sm md:text-lg flex">
+                  {format(review.createdAt, "dd-MMM-yyyy")}
+                </div>
+              </div>
+
+              <div>{review.comment}</div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

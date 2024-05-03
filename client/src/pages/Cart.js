@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Trash } from "phosphor-react";
+import { Trash, X } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
@@ -32,8 +32,14 @@ const AddressPopup = ({ isOpen, setAddressPopup, allAddress, setAddress }) => {
     isOpen && (
       <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-50 flex justify-center items-center">
         <div className=" p-6 bg-[#030101] rounded-lg w-11/12 sm:w-[400px] text-white select-none">
-          <div className="text-3xl text-center border-b-2 border-gray-400 mb-4">
-            Select Address
+          <div className="text-3xl text-center border-b-2 border-gray-400 mb-4 pb-2 flex items-center relative">
+            <div>Select Address</div>
+            <div
+              onClick={() => setAddressPopup(false)}
+              className="absolute right-0 text-2xl p-2 hover:bg-[#323232] rounded-full select-none cursor-pointer"
+            >
+              <X />
+            </div>
           </div>
           <div className="w-full enableScroll h-96">
             {allAddress.map((add) => {
@@ -78,8 +84,12 @@ export default function Cart() {
   };
   const checkoutHandler = async () => {
     const token = window.localStorage.getItem("token");
-    if (total == 0) {
-      setError("cart is empty");
+    if (total === 0) {
+      setError("Cart is empty");
+      return;
+    }
+    if (address === "Select Address") {
+      setError("Please select an address");
       return;
     }
     if (!token) {

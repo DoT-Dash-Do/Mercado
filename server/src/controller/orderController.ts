@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import OrderModel from "../models/order";
-import UserModel from "../models/user";
 import ProductModel from "../models/product";
-import { errorHandler } from "../utils/error";
 import SellerModel from "../models/seller";
+import UserModel from "../models/user";
+import { errorHandler } from "../utils/error";
 dotenv.config();
 
 // recieve array from req.body
@@ -33,20 +33,24 @@ export const addOrder = async (
     for (let i = user.cart.length - 1; i >= 0; i--) {
       const product: any = await ProductModel.findById(user.cart[i].product);
       const newOrder = new OrderModel({
-        address:address,
+        address: address,
         product: user.cart[i].product,
-        seller:product.seller._id,
+        seller: product.seller._id,
         quantity: user.cart[i].quantity,
         user: decoded,
-        order_id:order_id,
-        totalPrice:Number(product.price*user.cart[i].quantity),
-        status:"Payment Processing"
+        order_id: order_id,
+        totalPrice: Number(product.price * user.cart[i].quantity),
+        status: "Payment Processing",
       });
       await newOrder.save();
     }
-    await UserModel.findByIdAndUpdate(decoded,{
-      cart:[]
-    },{new:true});
+    await UserModel.findByIdAndUpdate(
+      decoded,
+      {
+        cart: [],
+      },
+      { new: true }
+    );
     res.status(201).json({
       success: true,
       message: "Saved Order successfully",
@@ -61,7 +65,7 @@ export const placeOrder = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { token, order_id,update_id } = req.body;
+  const { token, order_id, update_id } = req.body;
 
   try {
     const decoded: any = jwt.verify(
@@ -76,28 +80,36 @@ export const placeOrder = async (
     if (decoded === undefined) {
       return next(errorHandler(501, "Unauthorized access"));
     }
-    
+
     const order = await OrderModel.find({ user: decoded, order_id: update_id });
-    for (let i = order.length - 1; i >= 0; i--)
-    {
-      if(order[i].status === "Payment Processing")
-        {
-          await OrderModel.findByIdAndUpdate(order[i]._id,{
+    for (let i = order.length - 1; i >= 0; i--) {
+      if (order[i].status === "Payment Processing") {
+        await OrderModel.findByIdAndUpdate(
+          order[i]._id,
+          {
             order_id,
-            status:"order placed"
-          },{new:true});
-          const seller:any = await SellerModel.findById(order[i].seller._id);
-          await SellerModel.findByIdAndUpdate(order[i].seller._id,{
-            balance: seller.balance + (order[i].totalPrice)
-          },{new:true});
-          const product:any = await ProductModel.findById(order[i].product._id);
-          await ProductModel.findByIdAndUpdate(order[i].product._id,
-            {
-              soldStock:product.soldStock + order[i].quantity,
-              stock:product.stock - order[i].quantity,
-            },{new:true}
-          );
-        }
+            status: "order placed",
+          },
+          { new: true }
+        );
+        const seller: any = await SellerModel.findById(order[i].seller._id);
+        await SellerModel.findByIdAndUpdate(
+          order[i].seller._id,
+          {
+            balance: seller.balance + order[i].totalPrice,
+          },
+          { new: true }
+        );
+        const product: any = await ProductModel.findById(order[i].product._id);
+        await ProductModel.findByIdAndUpdate(
+          order[i].product._id,
+          {
+            soldStock: product.soldStock + order[i].quantity,
+            stock: product.stock - order[i].quantity,
+          },
+          { new: true }
+        );
+      }
     }
     res.status(201).json({
       success: true,
@@ -114,7 +126,7 @@ export const failedOrder = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { token,update_id } = req.body;
+  const { token, update_id } = req.body;
 
   try {
     const decoded: any = jwt.verify(
@@ -129,16 +141,18 @@ export const failedOrder = async (
     if (decoded === undefined) {
       return next(errorHandler(501, "Unauthorized access"));
     }
-    
+
     const order = await OrderModel.find({ user: decoded, order_id: update_id });
-    for (let i = order.length - 1; i >= 0; i--)
-    {
-      if(order[i].status === "Payment Processing")
-        {
-          await OrderModel.findByIdAndUpdate(order[i]._id,{
-            status:"payment failed"
-          },{new:true});
-        }
+    for (let i = order.length - 1; i >= 0; i--) {
+      if (order[i].status === "Payment Processing") {
+        await OrderModel.findByIdAndUpdate(
+          order[i]._id,
+          {
+            status: "payment failed",
+          },
+          { new: true }
+        );
+      }
     }
     res.status(201).json({
       success: true,
@@ -172,7 +186,31 @@ export const displayOrderOfUser = async (
 
     const orders = await OrderModel.find({ user });
 
-    res.status(201).json({ orders });
+    const sentOrders = orders.filter((order) => {
+      return order?.status !== "Payment Processing";
+    });
+
+    //populate
+    // const orders = await OrderModel.find({ seller }).populate("product");
+
+    const sentOrderDetails = [];
+
+    for (const order of sentOrders) {
+      const product = await ProductModel.findById({ _id: order.product });
+      if (product) {
+        sentOrderDetails.push({
+          name: product.ProductName,
+          price: product.price,
+          type: product.type,
+          image: product.images[0],
+          productId: product._id,
+        });
+      }
+    }
+
+    return res
+      .status(201)
+      .json({ orders: sentOrders, orderDetails: sentOrderDetails });
   } catch (err) {
     return next(errorHandler(501, "Unauthorized Access"));
   }
@@ -236,4 +274,3 @@ export const displayOrderOfSeller = async (
     return next(errorHandler(501, "Unauthorized Access"));
   }
 };
-
