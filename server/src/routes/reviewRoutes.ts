@@ -4,6 +4,6 @@ const router = express.Router();
 import { addReview, fetchAllReview } from "../controller/reviewController";
 
 router.post("/add-review", addReview);
-router.post("/fetch-reviews", fetchAllReview);
+router.get("/fetch-reviews/:id", fetchAllReview);
 
 export default router;

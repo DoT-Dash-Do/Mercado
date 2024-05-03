@@ -42,7 +42,7 @@ export const addReview = async (req: any, res: any, next: any) => {
     await newReview.save();
 
     return res.status(201).json({
-      message: "sucessfully saved",
+      message: "Review posted",
     });
   } catch (err) {
     return next(errorHandler(501, "Unauthorized Access"));
@@ -50,25 +50,8 @@ export const addReview = async (req: any, res: any, next: any) => {
 };
 
 export const fetchAllReview = async (req: any, res: any, next: any) => {
-  const { token, product } = req.body;
-
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "haklabaBuptis",
-      (err: any, data: any) => {
-        if (err) {
-          return undefined;
-        } else {
-          return data.id;
-        }
-      }
-    );
-
-    if (decoded === undefined) {
-      return next(errorHandler(501, "Unauthorized Access"));
-    }
-
+    const product = req.params.id;
     const reviews = await ReviewModel.find({ product });
 
     return res.json({

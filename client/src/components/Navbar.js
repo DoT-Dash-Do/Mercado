@@ -1,8 +1,12 @@
-import { Receipt, ShoppingCartSimple } from "phosphor-react";
+import {
+  IdentificationCard,
+  Receipt,
+  ShoppingCartSimple,
+} from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
+const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
   const navigate = useNavigate();
   const [menuBar, setMenuBar] = useState(false);
   const [displayPP, setDisplayPP] = useState(
@@ -57,6 +61,10 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
   const openCart = () => {
     navigate("/cart");
   };
+
+  const dashboradNav = () => {
+    navigate("/Dashboard");
+  };
   return (
     <>
       <div className="fixed top-0 z-50 w-full h-16 bg-[#121212] text-white select-none flex justify-between text-base">
@@ -85,21 +93,35 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
           </div>
           {loggedIn && (
             <>
-              <div
-                onClick={handleOrderNav}
-                title="Orders"
-                className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
-              >
-                <Receipt size={24} />
-              </div>
+              {type === "user" ? (
+                <div
+                  onClick={handleOrderNav}
+                  title="Orders"
+                  className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
+                >
+                  <Receipt size={24} />
+                </div>
+              ) : (
+                <></>
+              )}
 
-              <div
-                title="Cart"
-                className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
-                onClick={() => openCart()}
-              >
-                <ShoppingCartSimple size={24} />
-              </div>
+              {type === "user" ? (
+                <div
+                  title="Cart"
+                  className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
+                  onClick={() => openCart()}
+                >
+                  <ShoppingCartSimple size={24} />
+                </div>
+              ) : (
+                <div
+                  title="Dashboard"
+                  className="w-16 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
+                  onClick={dashboradNav}
+                >
+                  <IdentificationCard size={24} />
+                </div>
+              )}
             </>
           )}
 
@@ -186,12 +208,17 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic }) => {
               >
                 Orders
               </div>
-              <div
-                title="Cart"
-                className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
-              >
-                Cart
-              </div>
+              {type === "user" ? (
+                <div
+                  title="Cart"
+                  className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
+                >
+                  Cart
+                </div>
+              ) : (
+                <></>
+              )}
+
               <div
                 onClick={handleLogoutNav}
                 title="Register"

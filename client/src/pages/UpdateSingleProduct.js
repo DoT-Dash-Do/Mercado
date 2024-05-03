@@ -2,11 +2,13 @@ import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import { ArrowLeft, Trash } from "phosphor-react";
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { default as React, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../components/Loading";
 
-const AddProduct = () => {
-  const token = window.localStorage.getItem("token");
+const UpdateSingleProduct = () => {
+  const params = useParams();
+  const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
@@ -15,16 +17,50 @@ const AddProduct = () => {
   const [stock, setStock] = useState(0);
   const [images, setImages] = useState([]);
 
-  const [error, setError] = useState("");
-  const [value, setValue] = useState(false);
-
+  const [error, setError] = useState(false);
   const errorRef = useRef();
 
   const navigate = useNavigate();
 
+  const fetchProduct = async () => {
+    const token = window.localStorage.getItem("token");
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:3003/api/product/fetch-single-product",
+        {
+          token,
+          productId: params.id,
+        }
+      );
+      setName(response.data.product.ProductName);
+      setDesc(response.data.product.description);
+      setType(response.data.product.type);
+      setPrice(response.data.product.price);
+      setStock(response.data.product.stock);
+      setImages(response.data.product.images);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log("Authentication failed");
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  const handleImageDel = async (e) => {
+    setLoading(true);
+    await images.splice(e.currentTarget.id, 1);
+    setImages(images);
+    setLoading(false);
+  };
+
   const handleFileUpload = (e) => {
     const selectedFile = e.target.files[0];
-    setValue(true);
+    setLoading(true);
     if (selectedFile) {
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(selectedFile.name);
@@ -32,7 +68,7 @@ const AddProduct = () => {
       fileRef.put(selectedFile).then((snapshot) => {
         snapshot.ref.getDownloadURL().then((downloadURL) => {
           images.push(downloadURL);
-          setValue(false);
+          setLoading(false);
         });
       });
     } else {
@@ -40,16 +76,8 @@ const AddProduct = () => {
     }
   };
 
-  const handleImageDel = async (e) => {
-    setValue(true);
-    await images.splice(e.currentTarget.id, 1);
-    setImages(images);
-    setValue(false);
-  };
-
   const handleCancel = (e) => {
-    e.preventDefault();
-    navigate("/Dashboard");
+    navigate("/sellerProducts");
   };
 
   const handleSave = async (e) => {
@@ -79,63 +107,48 @@ const AddProduct = () => {
       return;
     }
 
-    if (stock === 0) {
-      setError("Please provide a stock");
-      errorRef.current?.scrollIntoView();
-      return;
-    }
-
     if (images.length < 2) {
       setError("Please provide atleast 2 images");
       errorRef.current?.scrollIntoView();
       return;
     }
-
     try {
-      const response = await axios.post(
-        "http://localhost:3003/api/seller/uploadProduct",
+      const token = window.localStorage.getItem("token");
+      const response = await axios.put(
+        "http://localhost:3003/api/product/update-product",
         {
           ProductName: name,
-          price,
           type,
           description: desc,
-          images,
+          price,
           stock,
+          images,
+          productId: params.id,
           token,
         }
       );
 
-      console.log(response.data.message);
-
-      navigate("/Dashboard");
+      navigate("/sellerProducts");
     } catch (err) {
-      console.log(err);
+      console.log("Invalid Authentication");
     }
   };
 
-  if (value) {
-    return (
-      <div className="fixed top-0 w-full h-screen z-20 flex justify-center items-center p-4 bg-black bg-opacity-75 backdrop-blur-sm">
-        <div className="bg-[#282828] p-2 py-6 md:py-6 md:p-6 text-white w-full md:w-3/4 xl:w-5/12 rounded-lg">
-          <div className="w-full flex justify-center items-center text-xl md:text-2xl">
-            <h1>Loading . . . </h1>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className="pt-16 w-full bg-[#1f1f1f] h-screen enableScroll">
       <div
-        onClick={() => navigate("/Dashboard")}
+        onClick={() => navigate("/sellerProducts")}
         className="fixed left-4 top-20 text-2xl z-50 text-white p-2 rounded-full select-none cursor-pointer bg-[#121212] hover:bg-[#323232] shadow-sm shadow-white"
       >
         <ArrowLeft />
       </div>
 
       <div className="w-full p-4 md:p-8 flex flex-col items-center text-white">
-        <h1 className="text-2xl md:text-4xl select-none mb-4">Add product</h1>
+        <h1 className="text-2xl md:text-4xl select-none mb-4">
+          Update product
+        </h1>
         {/* PRODUCT CARD */}
         <div className="w-full lg:w-3/4 bg-[#282828] p-4 md:p-8 rounded-lg">
           <div className="w-full">
@@ -252,10 +265,10 @@ const AddProduct = () => {
             <input
               type="file"
               className="text-stone-500
-              file:mr-5 file:py-1 file:px-3 file:font-medium
-              file:bg-[#323232] file:text-white
-              hover:file:cursor-pointer hover:file:bg-[#4a4a4a]
-               file:rounded-l-md file:outline-none file:border-none file:py-2 w-full"
+          file:mr-5 file:py-1 file:px-3 file:font-medium
+          file:bg-[#323232] file:text-white
+          hover:file:cursor-pointer hover:file:bg-[#4a4a4a]
+           file:rounded-l-md file:outline-none file:border-none file:py-2 w-full"
               onChange={handleFileUpload}
               accept="image/*"
             />
@@ -299,11 +312,10 @@ const AddProduct = () => {
               onClick={handleSave}
               className="p-2 w-20 md:w-28 text-sm md:text-base flex justify-center items-center rounded-md bg-[#df94ff] text-black hover:bg-[#d166ff] cursor-pointer"
             >
-              Save
+              Update
             </div>
           </div>
         </div>
-
         {error && (
           <div
             ref={errorRef}
@@ -317,4 +329,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default UpdateSingleProduct;

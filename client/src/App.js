@@ -11,9 +11,11 @@ import Login from "./pages/Login";
 import Orders from "./pages/Orders";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Profile from "./pages/Profile";
+import RateProduct from "./pages/RateProduct";
 import Register from "./pages/Register";
 import SellerDashoard from "./pages/SellerDashoard";
 import UpdateProduct from "./pages/UpdateProduct";
+import UpdateSingleProduct from "./pages/UpdateSingleProduct";
 import ViewProduct from "./pages/ViewProduct";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -65,6 +67,7 @@ function App() {
             profilePic={profilePic}
             setToken={setToken}
             setProfilePic={setProfilePic}
+            type={type}
           />
         </MaybeShowNav>
 
@@ -84,6 +87,8 @@ function App() {
             element={<PaymentSuccess />}
           />
           <Route path="/sellerProducts" element={<UpdateProduct />} />
+          <Route path="/rate-product/:id" element={<RateProduct />} />
+          <Route path="/update-product/:id" element={<UpdateSingleProduct />} />
         </Routes>
       </Router>
     </div>

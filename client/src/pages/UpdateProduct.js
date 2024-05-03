@@ -1,9 +1,11 @@
-import { CurrencyInr, List, X } from "phosphor-react";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { CurrencyInr } from "phosphor-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateProduct() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchProductsOnHomePage = async () => {
       try {
@@ -11,7 +13,7 @@ export default function UpdateProduct() {
         const response = await axios.post(
           "http://localhost:3003/api/product/fetch-seller-products",
           {
-            token
+            token,
           }
         );
         setProducts(response.data.products);
@@ -21,7 +23,11 @@ export default function UpdateProduct() {
     };
     fetchProductsOnHomePage();
   }, []);
-  const handleProductNavigate = (e) => {};
+
+  const handleUpdate = (e) => {
+    navigate(`/update-product/${e.currentTarget.id}`);
+  };
+
   return (
     <div className="pt-16  w-full h-screen bg-[#1f1f1f] enableScroll">
       <div className="w-full flex flex-wrap justify-center">
@@ -30,8 +36,6 @@ export default function UpdateProduct() {
           return (
             <div
               key={product._id}
-              id={product._id}
-              onClick={handleProductNavigate}
               className="text-white bg-[#3b3b3b] w-64 h-80 m-8 rounded-lg select-none cursor-pointer"
             >
               <div className="h-56 p-2 rounded-t-lg">
@@ -58,7 +62,11 @@ export default function UpdateProduct() {
                   <CurrencyInr size={16} />
                   {product.price}
                 </div>
-                <div className="p-1 hover:bg-[#323232] text-[#df94ff] rounded-md">
+                <div
+                  onClick={handleUpdate}
+                  id={product._id}
+                  className="p-1 px-3 hover:bg-[#323232] text-[#df94ff] rounded-md"
+                >
                   Edit
                 </div>
               </div>
