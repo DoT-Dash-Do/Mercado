@@ -1,35 +1,44 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../components/Loading";
+import OrderFailed from "../components/OrderFailed";
+import OrderPlaced from "../components/OrderPlaced";
+
 export default function PaymentSuccess() {
-  const [button, setButton] = useState(true);
+  const [orderStatus, setOrderStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const placeOrder = async () => {
     const { address, order_id } = params;
     const token = window.localStorage.getItem("token");
     try {
-      setButton(false);
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:3003/api/order/place-order",
         {
           token: token,
           order_id: order_id,
-          update_id: address
+          update_id: address,
         }
       );
-      navigate("/");
-    } catch (error) {}
+      setLoading(false);
+      setOrderStatus(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      setLoading(false);
+      setOrderStatus(false);
+    }
   };
 
-  useEffect((
-    ()=>{
-      placeOrder();
-    }
-  ),[])
-  return (
-    <div className="pt-16">
-      your order has been placed
-    </div>
-  );
+  useEffect(() => {
+    placeOrder();
+  }, []);
+
+  if (loading) return <Loading />;
+
+  return <>{orderStatus ? <OrderPlaced /> : <OrderFailed />} </>;
 }
