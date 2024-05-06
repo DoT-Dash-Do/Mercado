@@ -65,16 +65,12 @@ export default function SellerDashoard() {
         </p>
         <div className="flex gap-4">
           <button
+            onClick={() => navigate("/add-product")}
             className="text-white text-xl p-1 rounded-lg hover:bg-[#484848] flex text-center items-center gap-1"
             title="add product"
           >
             <CirclesThreePlus size={30} />
-            <div
-              onClick={() => navigate("/add-product")}
-              className="hidden lg:block"
-            >
-              Add Product
-            </div>
+            <div className="hidden lg:block">Add Product</div>
           </button>
           <button
             className="text-white text-xl p-1  rounded-lg hover:bg-[#484848] flex text-center items-center gap-1"
@@ -138,7 +134,10 @@ export default function SellerDashoard() {
         </div>
         <div className="flex-col lg:flex-row justify-between lg:flex overflow-auto w-full">
           <div className="p-2 lg:w-1/4">
-            <button className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full">
+            <button
+              onClick={() => navigate("/seller-order-status")}
+              className="text-3xl text-white p-4 bg-[#3e3e3e] rounded-lg hover:bg-black w-full"
+            >
               Update Orders
             </button>
           </div>

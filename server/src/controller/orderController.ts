@@ -184,33 +184,13 @@ export const displayOrderOfUser = async (
       return next(errorHandler(501, "Unauthorized Access"));
     }
 
-    const orders = await OrderModel.find({ user });
+    const orders = await OrderModel.find({ user }).populate("product");
 
     const sentOrders = orders.filter((order) => {
       return order?.status !== "Payment Processing";
     });
 
-    //populate
-    // const orders = await OrderModel.find({ seller }).populate("product");
-
-    const sentOrderDetails = [];
-
-    for (const order of sentOrders) {
-      const product = await ProductModel.findById({ _id: order.product });
-      if (product) {
-        sentOrderDetails.push({
-          name: product.ProductName,
-          price: product.price,
-          type: product.type,
-          image: product.images[0],
-          productId: product._id,
-        });
-      }
-    }
-
-    return res
-      .status(201)
-      .json({ orders: sentOrders, orderDetails: sentOrderDetails });
+    return res.status(201).json({ orders: sentOrders });
   } catch (err) {
     return next(errorHandler(501, "Unauthorized Access"));
   }
@@ -272,5 +252,38 @@ export const displayOrderOfSeller = async (
     res.status(201).json({ orders });
   } catch (err) {
     return next(errorHandler(501, "Unauthorized Access"));
+  }
+};
+
+export const changeOrderStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token, order, changeStatus } = req.body;
+
+  try {
+    const seller = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, data: any) => {
+        if (err) return undefined;
+        else return data.id;
+      }
+    );
+
+    if (seller === undefined) {
+      return next(errorHandler(501, "Unauthorized Access"));
+    }
+
+    await OrderModel.findByIdAndUpdate(
+      { _id: order },
+      { status: changeStatus },
+      { new: true }
+    );
+
+    return res.status(201).json({ message: "Successfully Updated" });
+  } catch (err) {
+    return next(errorHandler(501, "Could not complete the request"));
   }
 };

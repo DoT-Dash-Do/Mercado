@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addOrder,
+  changeOrderStatus,
   displayOrderOfSeller,
   displayOrderOfUser,
   displaySingleOrder,
@@ -14,5 +15,6 @@ router.post("/place-order", placeOrder);
 router.post("/order-failed", failedOrder);
 router.post("/fetch-user-orders", displayOrderOfUser);
 router.post("/fetch-single-order", displaySingleOrder);
-router.post("/fetch-seller-order",displayOrderOfSeller);
+router.post("/fetch-seller-order", displayOrderOfSeller);
+router.put("/change-order-status", changeOrderStatus);
 export default router;
