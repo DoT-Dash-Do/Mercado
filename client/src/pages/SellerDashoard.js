@@ -13,6 +13,7 @@ export default function SellerDashoard() {
   });
   const [chartData, setChartData] = useState([]);
   const [sale, setSale] = useState(0);
+  const [transit ,setTransit] = useState(0);
   const navigate = useNavigate();
   const fetchDetails = async () => {
     const seller = window.localStorage.getItem("token");
@@ -23,6 +24,7 @@ export default function SellerDashoard() {
     }
     try {
       var itemsSold = 0;
+      var delivery = 0;
       const { data } = await axios.post(
         "http://localhost:3003/api/seller/get-dashboard-details",
         { token: seller }
@@ -36,12 +38,19 @@ export default function SellerDashoard() {
       let chart = new Map();
 
       response.data.orders.forEach((element) => {
-        var quant = element.quantity;
-        itemsSold = itemsSold + quant;
-        if (chart.get(element.product.type)) {
-          quant = element.quantity + chart.get(element.product.type);
+        if (element.status !== "payment failed" && element.status !== "Payment Processing") {
+          console.log(element.status);
+          var quant = element.quantity;
+          itemsSold = itemsSold + quant;
+          if (chart.get(element.product.type)) {
+            quant = element.quantity + chart.get(element.product.type);
+          }
+          chart.set(element.product.type, quant);
+          if(element.status !== "Delivered")
+          {
+            delivery++;
+          }
         }
-        chart.set(element.product.type, quant);
       });
       const mapEntriesArray = Array.from(chart.entries());
 
@@ -49,6 +58,7 @@ export default function SellerDashoard() {
         return { index, label, value };
       });
       setSale(itemsSold);
+      setTransit(delivery);
       setChartData(arrayOfObjects);
     } catch (error) {
       console.log(error);
@@ -229,7 +239,7 @@ export default function SellerDashoard() {
         </div>
       </div>
       <div className="bg-black w-11/12 bottom-0 mb-2 lg:fixed text-white text-2xl p-4 rounded-lg backdrop-blur-lg">
-        You currently have {orders.length} orders to be delivered
+        You currently have {transit} orders to be delivered
       </div>
     </div>
   );
