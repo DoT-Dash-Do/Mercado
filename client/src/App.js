@@ -89,6 +89,7 @@ function App() {
               <Route path="/view-orders" element={<Orders />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/userAddress" element={<Address />} />
+              <Route path="/rate-product/:id" element={<RateProduct />} />
               <Route
                 path="/paymentsuccess/:order_id/:address"
                 element={<PaymentSuccess />}
@@ -100,7 +101,7 @@ function App() {
               <Route path="/Dashboard" element={<SellerDashoard />} />
               <Route path="/add-product" element={<AddProduct />} />
               <Route path="/sellerProducts" element={<UpdateProduct />} />
-              <Route path="/rate-product/:id" element={<RateProduct />} />
+              <Route path="/profile" element={<Profile />} />
               <Route
                 path="/update-product/:id"
                 element={<UpdateSingleProduct />}

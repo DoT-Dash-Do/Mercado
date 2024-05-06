@@ -146,7 +146,7 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
         </div>
         {/* RIGHT DIV */}
         <div className="md:flex hidden">
-          {type === "user" ? (
+          {(type === "user" || type==="seller") ? (
             <div
               onClick={handleProfileNav}
               className="w-16 flex items-center justify-center border-gray-400 text-xl cursor-pointer hover:bg-[#323232]"

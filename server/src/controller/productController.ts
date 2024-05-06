@@ -138,3 +138,17 @@ export const fetchSellerProducts = async (
     return next(errorHandler(501, "Unauthorized access"));
   }
 };
+
+export const searchProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+  const {query} = req.params;
+  try {
+    const result = await ProductModel.find({ProductName:{$regex:query,$options:'i'}});
+    res.status(200).json({result});
+  } catch (error) {
+    next(errorHandler(404,"not found"));
+  }
+}

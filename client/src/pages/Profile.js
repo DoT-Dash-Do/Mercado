@@ -23,8 +23,8 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   const [profilePop, setProfilePop] = useState(false);
   const token = window.localStorage.getItem("token");
-  const handleNavigation = () => {
-    navig("/userAddress");
+  const handleNavigation = (address) => {
+    navig(address);
   };
   useEffect(() => {
     const fetchUserData = async () => {
@@ -193,62 +193,112 @@ const Profile = () => {
             <div className="flex w-full justify-center items-center p-2 gap-8">
               <div
                 onClick={handlePasswordPopup}
-                className="p-2 text-md md:text-lg border-2 rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-52 text-center"
+                className="p-2 text-md md:text-lg rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-52 text-center"
               >
                 Change Password
               </div>
               <div
                 onClick={handleProfilePicPopup}
-                className="p-2 text-md md:text-lg border-2 rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-44 text-center"
+                className="p-2 text-md md:text-lg rounded-md select-none cursor-pointer text-[#df94ff] border-2 border-[#df94ff] hover:bg-[#df94ff] hover:text-black w-44 text-center"
               >
                 Edit ProfilePic
               </div>
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-1/3 border-[#df94ff] lg:shadow-[#df94ff] shadow-lg lg:flex justify-center">
-          <div className="w-full flex flex-col items-center pb-10 justify-center px-4 sm:px-0">
-            <h1 className="text-5xl p-8 z-10 lg:flex absolute top-24 hidden select-none text-[#df94ff]">
-              Profile
-            </h1>
+        {type === "user" && (
+          <div className="w-full lg:w-1/3 border-[#df94ff] lg:shadow-[#df94ff] shadow-lg lg:flex justify-center">
+            <div className="w-full flex flex-col items-center pb-10 justify-center px-4 sm:px-0">
+              <h1 className="text-5xl p-8 z-10 lg:flex absolute top-24 hidden select-none text-[#df94ff]">
+                Profile
+              </h1>
 
-            <div className="text-sm sm:text-base lg:text-lg select-none w-full sm:w-3/4 md:w-1/2 lg:w-72 rounded-lg bg-[#282828]">
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-t-md">
-                <div>Saved Products</div>
-                <div>
-                  <ArrowLineDown className="text-lg sm:text-xl lg:text-2xl" />
+              <div className="text-sm sm:text-base lg:text-lg select-none w-full sm:w-3/4 md:w-1/2 lg:w-72 rounded-lg bg-[#282828]">
+                <div
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-t-md"
+                  onClick={() => handleNavigation("/cart")}
+                >
+                  <div>Saved Products</div>
+                  <div>
+                    <ArrowLineDown className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
                 </div>
-              </div>
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
-                <div>History</div>
-                <div>
-                  <ClockCounterClockwise className="text-lg sm:text-xl lg:text-2xl" />
+                <div
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                  onClick={() => handleNavigation("/view-orders")}
+                >
+                  <div>History</div>
+                  <div>
+                    <ClockCounterClockwise className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
                 </div>
-              </div>
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
-                <div>Payment Methods</div>
-                <div>
-                  <Money className="text-lg sm:text-xl lg:text-2xl" />
+                <div
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                  onClick={() => handleNavigation("/userAddress")}
+                >
+                  <div>Address</div>
+                  <div>
+                    <At className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
                 </div>
-              </div>
-              <div
-                className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
-                onClick={handleNavigation}
-              >
-                <div>Address</div>
-                <div>
-                  <At className="text-lg sm:text-xl lg:text-2xl" />
-                </div>
-              </div>
-              <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md">
-                <div>Contact Us</div>
-                <div>
-                  <Headset className="text-lg sm:text-xl lg:text-2xl" />
-                </div>
+                <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg" target="_blank"
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md"
+                >
+                  <div>Contact Us</div>
+                  <div>
+                    <Headset className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </a>
               </div>
             </div>
           </div>
-        </div>
+        )}
+        {type === "seller" && (
+          <div className="w-full lg:w-1/3 border-[#df94ff] lg:shadow-[#df94ff] shadow-lg lg:flex justify-center">
+            <div className="w-full flex flex-col items-center pb-10 justify-center px-4 sm:px-0">
+              <h1 className="text-5xl p-8 z-10 lg:flex absolute top-24 hidden select-none text-[#df94ff]">
+                Profile
+              </h1>
+
+              <div className="text-sm sm:text-base lg:text-lg select-none w-full sm:w-3/4 md:w-1/2 lg:w-72 rounded-lg bg-[#282828]">
+                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-t-md">
+                  <div>Update Orders</div>
+                  <div>
+                    <ArrowLineDown className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </div>
+                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
+                  <div>Dashboard</div>
+                  <div>
+                    <ClockCounterClockwise className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </div>
+                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
+                  <div>Update Products</div>
+                  <div>
+                    <Money className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </div>
+                <div
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                >
+                  <div>Add Products</div>
+                  <div>
+                    <At className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </div>
+                <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg"
+                className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md"
+                target="_blank">
+                  <div>Contact Us</div>
+                  <div>
+                    <Headset className="text-lg sm:text-xl lg:text-2xl" />
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { CurrencyInr } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "../components/Pagination";
-
 const SearchPage = () => {
   const [sidebar, setSidebar] = useState(false);
   const [products, setProducts] = useState([]);
@@ -25,9 +24,9 @@ const SearchPage = () => {
     try {
       const fetchProductsOnHomePage = async () => {
         const response = await axios.get(
-          "http://localhost:3003/api/product/fetch-all-products"
+          `http://localhost:3003/api/product/search-products/${query}`
         );
-        setProducts(response.data.products);
+        setProducts(response.data.result);
       };
       fetchProductsOnHomePage();
     } catch (err) {

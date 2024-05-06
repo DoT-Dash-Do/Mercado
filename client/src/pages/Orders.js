@@ -34,11 +34,11 @@ const Orders = () => {
   }, []);
 
   const handleProductNav = (e) => {
-    navigate(`/view-product/${e.currentTarget.id}`);
+    navigate(`/view-product/${e._id}`);
   };
 
   const handleRateNav = (e) => {
-    navigate(`/rate-product/${e.currentTarget.id}`);
+    navigate(`/rate-product/${e}`);
   };
 
   if (loading) return <Loading />;
@@ -96,7 +96,7 @@ const Orders = () => {
               {/* Hidden card */}
               <div className="px-2 sm:px-4 md:hidden">
                 <div>{order.address}</div>
-                <div className="text-lg md:text-2xl text-[#df94ff] flex items-center text-[#df94ff]">
+                <div className="text-lg md:text-2xl text-[#df94ff] flex items-center">
                   <CurrencyInr />
                   <span className="text-xl md:text-3xl">
                     {order.totalPrice}
@@ -112,8 +112,8 @@ const Orders = () => {
                   </div>
                   <div className="w-32 sm:w-full h-full flex-col sm:flex-row flex xl:flex-col items-center gap-2 lg:gap-4 xl:gap-0 justify-end xl:justify-around">
                     <div
-                      onClick={handleProductNav}
-                      id={order.product.productId}
+                      onClick={()=>{handleProductNav(order.product)}}
+                      id={order.product._id}
                       className="w-32 sm:w-auto lg:w-36 xl:w-56 text-sm md:text-base xl:text-lg bg-[#262626] hover:bg-[#1f1f1f] p-3 rounded-md cursor-pointer flex justify-center items-center"
                     >
                       View Product
@@ -122,8 +122,8 @@ const Orders = () => {
                       Invoice
                     </div>
                     <div
-                      onClick={handleRateNav}
-                      id={order.product.productId}
+                      onClick={()=>handleRateNav(order.product._id)}
+                      id={order.product._id}
                       className="w-32 sm:w-auto lg:w-36 xl:w-56 text-sm md:text-base xl:text-lg bg-[#262626] hover:bg-[#1f1f1f] p-3 rounded-md cursor-pointer flex justify-center items-center"
                     >
                       Review

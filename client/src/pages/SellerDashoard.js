@@ -39,7 +39,6 @@ export default function SellerDashoard() {
 
       response.data.orders.forEach((element) => {
         if (element.status !== "payment failed" && element.status !== "Payment Processing") {
-          console.log(element.status);
           var quant = element.quantity;
           itemsSold = itemsSold + quant;
           if (chart.get(element.product.type)) {
