@@ -125,7 +125,6 @@ const Register = () => {
       setError(err.response.data.message);
       return;
     }
-
     console.log("Registered");
     navigate("/login");
   };
@@ -230,7 +229,7 @@ const Register = () => {
         return;
       }
     } catch (err) {
-      console.log(err.response.data.message);
+      setError(err.response.data.message);
       return;
     }
 
