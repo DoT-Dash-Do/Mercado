@@ -26,12 +26,12 @@ export default function SellerDashoard() {
       var itemsSold = 0;
       var delivery = 0;
       const { data } = await axios.post(
-        "http://localhost:3003/api/seller/get-dashboard-details",
+        "https://mercado-bq2x.onrender.com/api/seller/get-dashboard-details",
         { token: seller }
       );
       setDetails(data.data);
       const response = await axios.post(
-        "http://localhost:3003/api/order/fetch-seller-order",
+        "https://mercado-bq2x.onrender.com/api/order/fetch-seller-order",
         { token: seller }
       );
       setOrders(response.data.orders);

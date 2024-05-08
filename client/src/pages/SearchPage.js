@@ -27,7 +27,7 @@ const SearchPage = () => {
     const modified = query.replaceAll("-", " ");
     setSearchQuery(modified);
     const response = await axios.get(
-      `http://localhost:3003/api/product/search-products/${modified}`
+      `https://mercado-bq2x.onrender.com/api/product/search-products/${modified}`
     );
     setProducts(response.data.result);
   };

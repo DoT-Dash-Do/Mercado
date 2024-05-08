@@ -15,7 +15,7 @@ export default function Address() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/address/delete-address",
+        "https://mercado-bq2x.onrender.com/api/address/delete-address",
         {
           token,
           deletionId: e.currentTarget.id,
@@ -50,7 +50,7 @@ export default function Address() {
     }
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/address/save-address",
+        "https://mercado-bq2x.onrender.com/api/address/save-address",
         { token, ...formData }
       );
       console.log(response);
@@ -66,7 +66,7 @@ export default function Address() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/address/display-all-addresses",
+        "https://mercado-bq2x.onrender.com/api/address/display-all-addresses",
         {
           token,
         }

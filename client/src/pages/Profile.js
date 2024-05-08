@@ -29,7 +29,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/user/get-user-data",
+        "https://mercado-bq2x.onrender.com/api/user/get-user-data",
         {
           token,
         }
@@ -39,7 +39,7 @@ const Profile = () => {
     };
     const fetchSellerData = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/get-seller-data",
+        "https://mercado-bq2x.onrender.com/api/seller/get-seller-data",
         {
           token,
         }
@@ -55,7 +55,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/user/get-user-data",
+        "https://mercado-bq2x.onrender.com/api/user/get-user-data",
         {
           token,
         }
@@ -64,7 +64,7 @@ const Profile = () => {
     };
     const fetchSellerData = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/get-seller-data",
+        "https://mercado-bq2x.onrender.com/api/seller/get-seller-data",
         {
           token,
         }

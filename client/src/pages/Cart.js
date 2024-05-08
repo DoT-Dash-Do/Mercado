@@ -102,7 +102,7 @@ export default function Cart() {
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const response = await axios.post(
-        "http://localhost:3003/api/order/add-order",
+        "https://mercado-bq2x.onrender.com/api/order/add-order",
         {
           token: token,
           address: address,
@@ -111,7 +111,7 @@ export default function Cart() {
       );
       const {
         data: { order },
-      } = await axios.post("http://localhost:3003/api/payment/checkout", {
+      } = await axios.post("https://mercado-bq2x.onrender.com/api/payment/checkout", {
         token,
         amount: total,
       });
@@ -126,7 +126,7 @@ export default function Cart() {
         order_id: order.id,
         handler: async (response) => {
           const { data } = await axios.post(
-            "http://localhost:3003/api/payment/callBack",
+            "https://mercado-bq2x.onrender.com/api/payment/callBack",
             {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -152,7 +152,7 @@ export default function Cart() {
       const ans = rzp1.open();
       rzp1.on("payment.failed", async (response) => {
         setError("PaymentFailed");
-        await axios.post("http://localhost:3003/api/order/order-failed", {
+        await axios.post("https://mercado-bq2x.onrender.com/api/order/order-failed", {
           token: token,
           update_id: randOrder,
         });
@@ -166,7 +166,7 @@ export default function Cart() {
     try {
       const token = window.localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:3003/api/user/removefromcart",
+        "https://mercado-bq2x.onrender.com/api/user/removefromcart",
         {
           token: token,
           product: product,
@@ -188,7 +188,7 @@ export default function Cart() {
     try {
       var total = 0;
       const response = await axios.post(
-        "http://localhost:3003/api/user/populate-cart",
+        "https://mercado-bq2x.onrender.com/api/user/populate-cart",
         { token: token }
       );
       setItems(response.data.cart);
@@ -207,7 +207,7 @@ export default function Cart() {
       const token = window.localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:3003/api/address/display-all-addresses",
+        "https://mercado-bq2x.onrender.com/api/address/display-all-addresses",
         {
           token,
         }

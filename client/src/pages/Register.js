@@ -106,7 +106,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/user/register",
+        "https://mercado-bq2x.onrender.com/api/user/register",
         {
           firstName: buyerFN,
           lastName: buyerLN,
@@ -212,7 +212,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/register",
+        "https://mercado-bq2x.onrender.com/api/seller/register",
         {
           firstName: sellerFN,
           lastName: sellerLN,

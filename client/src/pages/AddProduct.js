@@ -93,7 +93,7 @@ const AddProduct = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/uploadProduct",
+        "https://mercado-bq2x.onrender.com/api/seller/uploadProduct",
         {
           ProductName: name,
           price,

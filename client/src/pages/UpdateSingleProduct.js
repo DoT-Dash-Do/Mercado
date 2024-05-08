@@ -28,7 +28,7 @@ const UpdateSingleProduct = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3003/api/product/fetch-single-product",
+        "https://mercado-bq2x.onrender.com/api/product/fetch-single-product",
         {
           token,
           productId: params.id,
@@ -115,7 +115,7 @@ const UpdateSingleProduct = () => {
     try {
       const token = window.localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:3003/api/product/update-product",
+        "https://mercado-bq2x.onrender.com/api/product/update-product",
         {
           ProductName: name,
           type,
