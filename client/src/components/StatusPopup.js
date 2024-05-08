@@ -14,7 +14,7 @@ const StatusPopup = ({ status, setStatus, change, setStatusPop }) => {
     try {
       const token = window.localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:3003/api/order/change-order-status",
+        "https://mercado-bq2x.onrender.com/api/order/change-order-status",
         {
           token,
           order: change,

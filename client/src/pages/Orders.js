@@ -15,7 +15,7 @@ const Orders = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3003/api/order/fetch-user-orders",
+        "https://mercado-bq2x.onrender.com/api/order/fetch-user-orders",
         {
           token,
         }

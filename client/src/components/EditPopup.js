@@ -19,14 +19,14 @@ const EditPopup = ({
   const handleUsernameSave = async () => {
     try {
       if (type === "user") {
-        await axios.put("http://localhost:3003/api/user/updateUser/username", {
+        await axios.put("https://mercado-bq2x.onrender.com/api/user/updateUser/username", {
           token,
           updatedField: field,
         });
       }
       if (type === "seller") {
         await axios.put(
-          "http://localhost:3003/api/seller/updateSeller/username",
+          "https://mercado-bq2x.onrender.com/api/seller/updateSeller/username",
           {
             token,
             updatedField: field,
@@ -43,14 +43,14 @@ const EditPopup = ({
   const handleFirstNameSave = async () => {
     try {
       if (type === "user") {
-        await axios.put("http://localhost:3003/api/user/updateUser/firstName", {
+        await axios.put("https://mercado-bq2x.onrender.com/api/user/updateUser/firstName", {
           token,
           updatedField: field,
         });
       }
       if (type === "seller") {
         await axios.put(
-          "http://localhost:3003/api/seller/updateSeller/firstName",
+          "https://mercado-bq2x.onrender.com/api/seller/updateSeller/firstName",
           {
             token,
             updatedField: field,
@@ -67,14 +67,14 @@ const EditPopup = ({
   const handleLastNameSave = async () => {
     try {
       if (type === "user") {
-        await axios.put("http://localhost:3003/api/user/updateUser/lastName", {
+        await axios.put("https://mercado-bq2x.onrender.com/api/user/updateUser/lastName", {
           token,
           updatedField: field,
         });
       }
       if (type === "seller") {
         await axios.put(
-          "http://localhost:3003/api/seller/updateSeller/lastName",
+          "https://mercado-bq2x.onrender.com/api/seller/updateSeller/lastName",
           {
             token,
             updatedField: field,

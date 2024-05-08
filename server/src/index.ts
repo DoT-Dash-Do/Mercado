@@ -48,6 +48,6 @@ app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(3003, () => {
+app.listen(5000, () => {
   console.log("server started");
 });

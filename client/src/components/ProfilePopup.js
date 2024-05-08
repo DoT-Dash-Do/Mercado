@@ -65,7 +65,7 @@ const ProfilePopup = ({
     try {
       if (type === "user") {
         await axios.put(
-          "http://localhost:3003/api/user/updateUser/profilePic",
+          "https://mercado-bq2x.onrender.com/api/user/updateUser/profilePic",
           {
             token,
             updatedField: imgUrl,
@@ -75,7 +75,7 @@ const ProfilePopup = ({
 
       if (type === "seller") {
         await axios.put(
-          "http://localhost:3003/api/seller/updateSeller/profilePic",
+          "https://mercado-bq2x.onrender.com/api/seller/updateSeller/profilePic",
           {
             token,
             updatedField: imgUrl,

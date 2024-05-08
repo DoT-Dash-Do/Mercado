@@ -21,7 +21,7 @@ const SellerOrders = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3003/api/order/fetch-seller-order",
+        "https://mercado-bq2x.onrender.com/api/order/fetch-seller-order",
         {
           token,
         }

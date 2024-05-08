@@ -55,7 +55,7 @@ const Login = ({ setToken }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/login",
+        "https://mercado-bq2x.onrender.com/api/seller/login",
         {
           email: sellerEmail,
           password: sellerPassword,
@@ -107,7 +107,7 @@ const Login = ({ setToken }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/user/login",
+        "https://mercado-bq2x.onrender.com/api/user/login",
         {
           email: buyerEmail,
           password: buyerPassword,

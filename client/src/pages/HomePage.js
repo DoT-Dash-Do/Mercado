@@ -24,7 +24,7 @@ const HomePage = () => {
     try {
       const fetchProductsOnHomePage = async () => {
         const response = await axios.get(
-          "http://localhost:3003/api/product/fetch-all-products"
+          "https://mercado-bq2x.onrender.com/api/product/fetch-all-products"
         );
         setProducts(response.data.products);
       };

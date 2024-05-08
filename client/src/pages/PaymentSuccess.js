@@ -16,7 +16,7 @@ export default function PaymentSuccess() {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3003/api/order/place-order",
+        "https://mercado-bq2x.onrender.com/api/order/place-order",
         {
           token: token,
           order_id: order_id,

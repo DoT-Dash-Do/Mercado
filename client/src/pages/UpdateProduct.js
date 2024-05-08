@@ -11,7 +11,7 @@ export default function UpdateProduct() {
       try {
         const token = window.localStorage.getItem("token");
         const response = await axios.post(
-          "http://localhost:3003/api/product/fetch-seller-products",
+          "https://mercado-bq2x.onrender.com/api/product/fetch-seller-products",
           {
             token,
           }

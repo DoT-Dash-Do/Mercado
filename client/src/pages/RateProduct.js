@@ -22,7 +22,7 @@ const RateProduct = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:3003/api/product/fetch-single-product",
+        "https://mercado-bq2x.onrender.com/api/product/fetch-single-product",
         {
           productId: params.id,
         }
@@ -62,7 +62,7 @@ const RateProduct = () => {
     try {
       const token = window.localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3003/api/review/add-review",
+        "https://mercado-bq2x.onrender.com/api/review/add-review",
         {
           comment,
           rating: stars,

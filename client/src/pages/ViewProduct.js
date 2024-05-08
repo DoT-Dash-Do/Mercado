@@ -44,7 +44,7 @@ const ViewProduct = () => {
   const fetchProduct = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3003/api/product/fetch-single-product",
+        "https://mercado-bq2x.onrender.com/api/product/fetch-single-product",
         {
           productId: params.id,
         }
@@ -64,7 +64,7 @@ const ViewProduct = () => {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3003/api/review/fetch-reviews/${params.id}`
+        `https://mercado-bq2x.onrender.com/api/review/fetch-reviews/${params.id}`
       );
       setReviews(response.data.reviews);
     } catch (err) {
@@ -84,7 +84,7 @@ const ViewProduct = () => {
     }
     try {
       const response = await axios.put(
-        "http://localhost:3003/api/user/addtocart",
+        "https://mercado-bq2x.onrender.com/api/user/addtocart",
         {
           token: token,
           product: params.id,

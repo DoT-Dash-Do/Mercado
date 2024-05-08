@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     const fetchValidity = async () => {
       try {
-        await axios.post("http://localhost:3003/api/user/user-validity", {
+        await axios.post("https://mercado-bq2x.onrender.com/api/user/user-validity", {
           token,
         });
         setLoggedIn(true);
@@ -47,7 +47,7 @@ function App() {
   useEffect(() => {
     const fetchSellerProfilePic = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/seller/get-profile-pic",
+        "https://mercado-bq2x.onrender.com/api/seller/get-profile-pic",
         {
           token,
         }
@@ -57,7 +57,7 @@ function App() {
     };
     const fetchUserProfilePic = async () => {
       const response = await axios.post(
-        "http://localhost:3003/api/user/get-profile-pic",
+        "https://mercado-bq2x.onrender.com/api/user/get-profile-pic",
         {
           token,
         }
