@@ -4,7 +4,7 @@ import React from "react";
 const Pagination = ({ totalProducts, limit, page, setCurrentPage }) => {
   const totalPages = Math.ceil(totalProducts.length / limit);
 
-  // if (totalPages === 1) return;
+  if (totalPages <= 1) return;
   return (
     <div className="select-none fixed bottom-2 flex justify-center items-center w-full text-white text-sm sm:text-lg z-50">
       <div className="flex items-center p-2 bg-[#323232] rounded-lg">

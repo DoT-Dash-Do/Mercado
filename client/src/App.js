@@ -54,9 +54,22 @@ function App() {
 
       setProfilePic(response.data.profilePic);
     };
+    const fetchUserProfilePic = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/user/get-profile-pic",
+        {
+          token,
+        }
+      );
+
+      setProfilePic(response.data.profilePic);
+    };
 
     if (type === "seller") {
       fetchSellerProfilePic();
+    }
+    if (type === "user") {
+      fetchUserProfilePic();
     }
   }, [type]);
 

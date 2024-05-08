@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUserData,
+  getUserProfilePic,
   loginUser,
   regUser,
   userValidity,
@@ -22,7 +23,7 @@ router.put("/addtocart", addToCart);
 router.put("/removefromcart", deletefromCart);
 router.post("/get-user-data", getUserData);
 router.post("/user-validity", userValidity);
-
+router.post("/get-profile-pic", getUserProfilePic);
 router.post("/populate-cart", populateCart);
 
 export default router;

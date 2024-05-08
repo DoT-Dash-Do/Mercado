@@ -7,7 +7,10 @@ const SearchPage = () => {
   const [sidebar, setSidebar] = useState(false);
   const [products, setProducts] = useState([]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const { query } = useParams();
+  const type = window.localStorage.getItem("type");
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,19 +23,20 @@ const SearchPage = () => {
 
   const navigate = useNavigate();
 
+  const fetchProductsOnHomePage = async () => {
+    const modified = query.replaceAll("-", " ");
+    setSearchQuery(modified);
+    const response = await axios.get(
+      `http://localhost:3003/api/product/search-products/${modified}`
+    );
+    setProducts(response.data.result);
+  };
+
   useEffect(() => {
-    try {
-      const fetchProductsOnHomePage = async () => {
-        const response = await axios.get(
-          `http://localhost:3003/api/product/search-products/${query}`
-        );
-        setProducts(response.data.result);
-      };
-      fetchProductsOnHomePage();
-    } catch (err) {
-      console.log("no internet connection");
-    }
-  }, []);
+    const modified = query.replaceAll("-", " ");
+    setSearchQuery(modified);
+    fetchProductsOnHomePage();
+  }, [query]);
 
   const handleSidebarView = () => {
     setSidebar(!sidebar);
@@ -44,37 +48,23 @@ const SearchPage = () => {
 
   return (
     <>
-      {/* {sidebar && (
-    <div className="fixed pt-16 top-0 left-0 w-80 h-screen bg-[#121212] text-white enableScroll select-none z-40 transition duration-500 ease-in-out">
-      <div className="w-full pt-4 flex p-4">
-        <div
-          onClick={handleSidebarView}
-          className="p-2 rounded-full cursor-pointer hover:bg-[#323232]"
-        >
-          <X size={28} />
-        </div>
-      </div>
-      <div className="text-lg p-4">
-        <h1 className="text-xl">Filter</h1>
-      </div>
-    </div>
-  )} */}
-
       <div className="pt-16  w-full h-screen bg-[#1f1f1f] enableScroll">
-        {/* <div className="w-full flex justify-center p-4">
-      <div className="w-full flex justify-between items-center text-white select-none">
-        <div
-          onClick={handleSidebarView}
-          className="p-2 flex justify-center items-center rounded-full cursor-pointer hover:bg-[#323232]"
-        >
-          <List size={28} />
-        </div>
-        <div className="p-2 border-2 w-24 flex justify-center items-center rounded-md cursor-pointer">
-          Sort by
-        </div>
-      </div>
-    </div> */}
         <div className="w-full flex flex-wrap justify-center mb-20">
+          {products.length === 0 ? (
+            <div className="w-full border-b-2 break-all border-gray-400 mt-4 p-4 text-white text-lg mx-2">
+              No results for "{searchQuery}"
+            </div>
+          ) : (
+            <div className="w-full border-b-2 break-all border-gray-400 mt-4 p-4 text-white mx-2">
+              <h1 className="text-base sm:text-lg">
+                Showing results for "{searchQuery}"
+              </h1>
+              <div className="text-sm sm:text-base mt-4">
+                Total {products.length} products found
+              </div>
+            </div>
+          )}
+
           {/* PRODUCT CARD */}
           {currentProducts.map((product) => {
             return (
@@ -108,9 +98,11 @@ const SearchPage = () => {
                     <CurrencyInr size={16} />
                     {product.price}
                   </div>
-                  <div className="p-1 hover:bg-[#323232] text-[#df94ff] rounded-md">
-                    Add to cart
-                  </div>
+                  {type === "user" && (
+                    <div className="p-1 hover:bg-[#323232] text-[#df94ff] rounded-md">
+                      Add to cart
+                    </div>
+                  )}
                 </div>
               </div>
             );

@@ -3,6 +3,7 @@ import {
   MagnifyingGlass,
   Receipt,
   ShoppingCartSimple,
+  X,
 } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -80,6 +81,13 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     const query = search.trim().split(" ").join("-");
+
+    if (query === "") {
+      return;
+    }
+
+    setMiniSearch(false);
+    setMenuBar(false);
     navigate(`/search/${query}`);
   };
   return (
@@ -92,17 +100,24 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
             className="h-10 w-full flex items-center justify-center rounded-lg"
           >
             <input
-              className="text-sm md:text-base w-full h-full text-white outline-none p-2 rounded-l-md placeholder-gray-400 bg-[#222222] focus:scale-[1.005] transition duration-150"
+              className="text-sm md:text-base w-full sm:flex-grow h-full text-white outline-none p-2 rounded-l-md placeholder-gray-400 bg-[#222222] focus:scale-[1.005] transition duration-150"
               id="password"
               type="text"
               placeholder="Search products . . ."
               autoComplete="off"
               value={search}
+              onClick={() => setMenuBar(false)}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="w-28 sm:w-32 h-full text-2xl flex justify-center items-center text-[#df94ff] bg-[#4a4a4a] rounded-r-md">
+            <button className="w-20 sm:w-32 h-full text-2xl flex justify-center items-center text-[#df94ff] bg-[#4a4a4a] rounded-r-md">
               <MagnifyingGlass />
             </button>
+            <div
+              onClick={() => setSearch("")}
+              className="absolute right-20 sm:right-36 bg-[#222222] text-2xl rounded-full cursor-pointer text-gray-400"
+            >
+              <X />
+            </div>
           </form>
         </div>
       )}
@@ -120,10 +135,10 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
           </div>
           <form
             onSubmit={handleSearch}
-            className="h-full flex-grow hidden lg:flex items-center justify-center p-2 py-3"
+            className="h-full flex-grow hidden lg:flex items-center justify-center p-2 py-3 relative"
           >
             <input
-              className="text-sm md:text-base w-full h-full text-white outline-none p-2 rounded-l-md placeholder-gray-400 bg-[#222222] focus:scale-[1.01] transition duration-150"
+              className="text-sm md:text-base w-full h-full text-white outline-none p-2 rounded-l-md placeholder-gray-400 bg-[#222222] focus:scale-[1.005] transition duration-150"
               id="password"
               type="text"
               placeholder="Search products . . ."
@@ -134,6 +149,12 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
             <button className="w-28 sm:w-32 h-full text-2xl flex justify-center items-center bg-[#4a4a4a] text-[#df94ff] rounded-r-md">
               <MagnifyingGlass />
             </button>
+            <div
+              onClick={() => setSearch("")}
+              className="absolute right-36 bg-[#222222] text-2xl rounded-full cursor-pointer text-gray-400"
+            >
+              <X />
+            </div>
           </form>
           <div className="h-full flex text-2xl lg:hidden items-center justify-center">
             <button
@@ -146,7 +167,7 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
         </div>
         {/* RIGHT DIV */}
         <div className="md:flex hidden">
-          {(type === "user" || type==="seller") ? (
+          {type === "user" || type === "seller" ? (
             <div
               onClick={handleProfileNav}
               className="w-16 flex items-center justify-center border-gray-400 text-xl cursor-pointer hover:bg-[#323232]"
@@ -300,11 +321,18 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
               ) : (
                 <>
                   <div
-                    title="Orders"
+                    title="Dashboard"
                     onClick={dashboradNav}
                     className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
                   >
                     Dashboard
+                  </div>
+                  <div
+                    title="Profile"
+                    onClick={handleProfileNav}
+                    className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
+                  >
+                    Profile
                   </div>
                 </>
               )}
