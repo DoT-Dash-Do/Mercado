@@ -22,6 +22,7 @@ import SellerOrders from "./pages/SellerOrders";
 import UpdateProduct from "./pages/UpdateProduct";
 import UpdateSingleProduct from "./pages/UpdateSingleProduct";
 import ViewProduct from "./pages/ViewProduct";
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
@@ -72,9 +73,6 @@ function App() {
       fetchUserProfilePic();
     }
   }, [type]);
-
-  //implementation of navbar on selected pages is left.
-  //navbar will be loaded only once
 
   return (
     <div className="App">

@@ -3,19 +3,25 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+console.log(process.env.REACT_APP_API_KEY);
+console.log(process.env.REACT_APP_AUTH_DOMAIN);
+console.log(process.env.REACT_APP_PROJECT_ID);
+console.log(process.env.REACT_APP_STORAGE_BUCKET);
+console.log(process.env.REACT_APP_MESSAGING_SENDER_ID);
+console.log(process.env.REACT_APP_APP_ID);
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDcY7H-RZrUsBDRfi1ZKvBYWsVH23GxWIU",
+  apiKey: process.env.REACT_APP_API_KEY,
 
-  authDomain: "mercado-place.firebaseapp.com",
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
 
-  projectId: "mercado-place",
+  projectId: process.env.REACT_APP_PROJECT_ID,
 
-  storageBucket: "mercado-place.appspot.com",
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 
-  messagingSenderId: "499596340086",
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 
-  appId: "1:499596340086:web:c894275974e76bef7ae857",
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
