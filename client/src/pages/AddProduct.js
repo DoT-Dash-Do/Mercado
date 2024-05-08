@@ -1,7 +1,7 @@
 import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
-import { ArrowLeft, Trash } from "phosphor-react";
+import { Trash } from "phosphor-react";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -127,13 +127,6 @@ const AddProduct = () => {
 
   return (
     <div className="pt-16 w-full bg-[#1f1f1f] h-screen enableScroll">
-      <div
-        onClick={() => navigate("/Dashboard")}
-        className="fixed left-4 top-20 text-2xl z-50 text-white p-2 rounded-full select-none cursor-pointer bg-[#121212] hover:bg-[#323232] shadow-sm shadow-white"
-      >
-        <ArrowLeft />
-      </div>
-
       <div className="w-full p-4 md:p-8 flex flex-col items-center text-white">
         <h1 className="text-2xl md:text-4xl select-none mb-4">Add product</h1>
         {/* PRODUCT CARD */}

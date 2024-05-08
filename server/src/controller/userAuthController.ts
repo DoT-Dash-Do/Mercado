@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/user";
+import { default as User } from "../models/user";
 import { errorHandler } from "../utils/error";
 import { htmlResponse } from "../utils/htmlResponse";
 import { transporter } from "../utils/nodemailer";
@@ -154,5 +154,32 @@ export const userValidity = (
     res.status(200).json({ tokenStatus: true });
   } catch (err) {
     next(errorHandler(401, "unAuthenticated"));
+  }
+};
+
+export const getUserProfilePic = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { token } = req.body;
+
+  try {
+    const user = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "haklabaBuptis",
+      (err: any, result: any) => {
+        if (err) undefined;
+        return result.id;
+      }
+    );
+
+    const { profilePic } = (await User.findById({
+      _id: user,
+    })) as User;
+
+    return res.status(201).json({ profilePic });
+  } catch (err) {
+    return next(errorHandler(501, "Unauthorized access"));
   }
 };

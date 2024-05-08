@@ -16,6 +16,7 @@ const ProfilePopup = ({
   const [imgUrl, setImgUrl] = useState("");
   const [value, setValue] = useState(false);
   const [error, setError] = useState("");
+  const type = window.localStorage.getItem("type");
   const token = window.localStorage.getItem("token");
 
   const handleFileUpload = (e) => {
@@ -62,10 +63,25 @@ const ProfilePopup = ({
     }
 
     try {
-      await axios.put("http://localhost:3003/api/user/updateUser/profilePic", {
-        token,
-        updatedField: imgUrl,
-      });
+      if (type === "user") {
+        await axios.put(
+          "http://localhost:3003/api/user/updateUser/profilePic",
+          {
+            token,
+            updatedField: imgUrl,
+          }
+        );
+      }
+
+      if (type === "seller") {
+        await axios.put(
+          "http://localhost:3003/api/seller/updateSeller/profilePic",
+          {
+            token,
+            updatedField: imgUrl,
+          }
+        );
+      }
 
       setProfilePop(!profilePop);
     } catch (err) {

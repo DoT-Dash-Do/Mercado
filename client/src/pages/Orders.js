@@ -112,17 +112,17 @@ const Orders = () => {
                   </div>
                   <div className="w-32 sm:w-full h-full flex-col sm:flex-row flex xl:flex-col items-center gap-2 lg:gap-4 xl:gap-0 justify-end xl:justify-around">
                     <div
-                      onClick={()=>{handleProductNav(order.product)}}
+                      onClick={() => {
+                        handleProductNav(order.product);
+                      }}
                       id={order.product._id}
                       className="w-32 sm:w-auto lg:w-36 xl:w-56 text-sm md:text-base xl:text-lg bg-[#262626] hover:bg-[#1f1f1f] p-3 rounded-md cursor-pointer flex justify-center items-center"
                     >
                       View Product
                     </div>
-                    <div className="w-32 sm:w-auto lg:w-36 xl:w-56 text-sm md:text-base xl:text-lg bg-[#262626] hover:bg-[#1f1f1f] p-3 rounded-md cursor-pointer flex justify-center items-center">
-                      Invoice
-                    </div>
+
                     <div
-                      onClick={()=>handleRateNav(order.product._id)}
+                      onClick={() => handleRateNav(order.product._id)}
                       id={order.product._id}
                       className="w-32 sm:w-auto lg:w-36 xl:w-56 text-sm md:text-base xl:text-lg bg-[#262626] hover:bg-[#1f1f1f] p-3 rounded-md cursor-pointer flex justify-center items-center"
                     >

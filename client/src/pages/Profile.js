@@ -241,7 +241,9 @@ const Profile = () => {
                     <At className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
-                <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg" target="_blank"
+                <a
+                  href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg"
+                  target="_blank"
                   className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md"
                 >
                   <div>Contact Us</div>
@@ -261,25 +263,35 @@ const Profile = () => {
               </h1>
 
               <div className="text-sm sm:text-base lg:text-lg select-none w-full sm:w-3/4 md:w-1/2 lg:w-72 rounded-lg bg-[#282828]">
-                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-t-md">
+                <div
+                  onClick={() => navig("/seller-order-status")}
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-t-md"
+                >
                   <div>Update Orders</div>
                   <div>
                     <ArrowLineDown className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
-                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
+                <div
+                  onClick={() => navig("/Dashboard")}
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                >
                   <div>Dashboard</div>
                   <div>
                     <ClockCounterClockwise className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
-                <div className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center">
+                <div
+                  onClick={() => navig("/sellerProducts")}
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
+                >
                   <div>Update Products</div>
                   <div>
                     <Money className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
                 <div
+                  onClick={() => navig("/add-product")}
                   className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center"
                 >
                   <div>Add Products</div>
@@ -287,9 +299,11 @@ const Profile = () => {
                     <At className="text-lg sm:text-xl lg:text-2xl" />
                   </div>
                 </div>
-                <a href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg"
-                className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md"
-                target="_blank">
+                <a
+                  href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqbQxnBCBvdqXlrXfKsMVSVVKdRChlvGPrJJCFMnRRXGzfLzSfsnxTFkxdSlJsXTbjnFmg"
+                  className="p-3 cursor-pointer hover:bg-[#323232] flex justify-between items-center rounded-b-md"
+                  target="_blank"
+                >
                   <div>Contact Us</div>
                   <div>
                     <Headset className="text-lg sm:text-xl lg:text-2xl" />

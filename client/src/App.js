@@ -22,6 +22,7 @@ import SellerOrders from "./pages/SellerOrders";
 import UpdateProduct from "./pages/UpdateProduct";
 import UpdateSingleProduct from "./pages/UpdateSingleProduct";
 import ViewProduct from "./pages/ViewProduct";
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [type, setType] = useState("");
@@ -54,14 +55,24 @@ function App() {
 
       setProfilePic(response.data.profilePic);
     };
+    const fetchUserProfilePic = async () => {
+      const response = await axios.post(
+        "http://localhost:3003/api/user/get-profile-pic",
+        {
+          token,
+        }
+      );
+
+      setProfilePic(response.data.profilePic);
+    };
 
     if (type === "seller") {
       fetchSellerProfilePic();
     }
+    if (type === "user") {
+      fetchUserProfilePic();
+    }
   }, [type]);
-
-  //implementation of navbar on selected pages is left.
-  //navbar will be loaded only once
 
   return (
     <div className="App">

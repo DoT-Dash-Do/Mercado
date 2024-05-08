@@ -7,6 +7,7 @@ import Pagination from "../components/Pagination";
 const HomePage = () => {
   const [sidebar, setSidebar] = useState(false);
   const [products, setProducts] = useState([]);
+  const type = window.localStorage.getItem("type");
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,36 +44,7 @@ const HomePage = () => {
 
   return (
     <>
-      {/* {sidebar && (
-        <div className="fixed pt-16 top-0 left-0 w-80 h-screen bg-[#121212] text-white enableScroll select-none z-40 transition duration-500 ease-in-out">
-          <div className="w-full pt-4 flex p-4">
-            <div
-              onClick={handleSidebarView}
-              className="p-2 rounded-full cursor-pointer hover:bg-[#323232]"
-            >
-              <X size={28} />
-            </div>
-          </div>
-          <div className="text-lg p-4">
-            <h1 className="text-xl">Filter</h1>
-          </div>
-        </div>
-      )} */}
-
       <div className="pt-16  w-full h-screen bg-[#1f1f1f] enableScroll">
-        {/* <div className="w-full flex justify-center p-4">
-          <div className="w-full flex justify-between items-center text-white select-none">
-            <div
-              onClick={handleSidebarView}
-              className="p-2 flex justify-center items-center rounded-full cursor-pointer hover:bg-[#323232]"
-            >
-              <List size={28} />
-            </div>
-            <div className="p-2 border-2 w-24 flex justify-center items-center rounded-md cursor-pointer">
-              Sort by
-            </div>
-          </div>
-        </div> */}
         <div className="w-full flex flex-wrap justify-center mb-20">
           {/* PRODUCT CARD */}
           {currentProducts.map((product) => {
@@ -107,9 +79,11 @@ const HomePage = () => {
                     <CurrencyInr size={16} />
                     {product.price}
                   </div>
-                  <div className="p-1 hover:bg-[#323232] text-[#df94ff] rounded-md">
-                    Add to cart
-                  </div>
+                  {type === "user" && (
+                    <div className="p-1 hover:bg-[#323232] text-[#df94ff] rounded-md">
+                      Add to cart
+                    </div>
+                  )}
                 </div>
               </div>
             );
