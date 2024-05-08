@@ -45,6 +45,7 @@ const Orders = () => {
 
   return (
     <div className="pt-16 bg-[#1f1f1f] enableScroll w-full h-screen">
+      {orders.length === 0 && <div className="p-2 text-center text-2xl text-white">No Orders Placed</div>}
       <div className="w-full flex flex-col justify-center items-center">
         {orders.map((order, ind) => {
           return (
