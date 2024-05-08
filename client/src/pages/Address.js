@@ -11,7 +11,6 @@ export default function Address() {
   const [refresh, setRefresh] = useState(false);
 
   const deleteAddress = async (e) => {
-    console.log(e.currentTarget.id);
 
     try {
       const response = await axios.post(
@@ -53,7 +52,6 @@ export default function Address() {
         "https://mercado-bq2x.onrender.com/api/address/save-address",
         { token, ...formData }
       );
-      console.log(response);
       setError("");
       setRefresh(!refresh);
       setFormData({});
