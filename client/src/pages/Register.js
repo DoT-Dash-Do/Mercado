@@ -115,13 +115,14 @@ const Register = () => {
           password: buyerPassword,
         }
       );
-      console.log(response.data.message);
+      
       if (response.data.success === false) {
         setError(response.data.message);
         return;
       }
+      setError("");
     } catch (err) {
-      console.log(err.response.data.message);
+      setError(err.response.data.message);
       return;
     }
 
