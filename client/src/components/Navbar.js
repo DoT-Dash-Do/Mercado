@@ -306,12 +306,14 @@ const Navbar = ({ loggedIn, profilePic, setToken, setProfilePic, type }) => {
                     Profile
                   </div>
                   <div
+                    onClick={openCart}
                     title="Cart"
                     className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
                   >
                     Cart
                   </div>
                   <div
+                    onClick={handleOrderNav}
                     title="Orders"
                     className="w-full h-10 flex justify-center items-center cursor-pointer hover:bg-[#323232]"
                   >
