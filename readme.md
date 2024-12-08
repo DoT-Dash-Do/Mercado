@@ -1,3 +1,4 @@
+Personal Project Meracado - an ecommerce platform
 npm install
 
 <<<<<<< HEAD
@@ -7,7 +8,7 @@ touch .env
 Add DB_URI = youruri in .env file
 
 ADDITIONAL COMMANDS
-
+npm install in both server and client
 npm install axios
 npm install react-router-dom
 
